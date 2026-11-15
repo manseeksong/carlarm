@@ -1,0 +1,48 @@
+17:03:24 gear=Park lock=False doorFL=False cabin=True readFL=True amb=On/80/#ffffff hvac=True recirc=True fan=3 temp=24.0 seat=1
+=== A 3분째 17:04:39
+17:04:43 gear=Park lock=True doorFL=False cabin=False readFL=False amb=On/48/#ffffff hvac=True recirc=False fan=1 temp=25.0 seat=1
+17:04:44 gear=Park lock=True doorFL=False cabin=False readFL=False amb=On/8/#ffffff hvac=True recirc=False fan=1 temp=25.0 seat=1
+17:04:45 gear=Park lock=True doorFL=False cabin=False readFL=False amb=On/0/#ffffff hvac=True recirc=False fan=1 temp=25.0 seat=1
+17:05:40 gear=Park lock=True doorFL=False cabin=False readFL=False amb=On/14/#ffffff hvac=True recirc=False fan=1 temp=25.0 seat=1
+17:05:41 gear=Park lock=True doorFL=False cabin=False readFL=False amb=On/42/#ffffff hvac=True recirc=False fan=3 temp=21.0 seat=0
+17:05:42 gear=Park lock=True doorFL=False cabin=False readFL=False amb=On/63/#ffffff hvac=True recirc=False fan=3 temp=21.0 seat=0
+17:05:43 gear=Park lock=True doorFL=False cabin=False readFL=False amb=On/70/#ffffff hvac=True recirc=False fan=3 temp=21.0 seat=0
+17:05:49 gear=Park lock=True doorFL=False cabin=True readFL=True amb=On/70/#ffffff hvac=True recirc=False fan=3 temp=21.0 seat=0
+17:05:50 gear=Park lock=True doorFL=False cabin=True readFL=True amb=On/80/#ffffff hvac=True recirc=False fan=3 temp=21.0 seat=0
+17:05:52 gear=Park lock=True doorFL=False cabin=True readFL=True amb=On/80/#ffffff hvac=True recirc=True fan=3 temp=21.0 seat=0
+17:05:53 gear=Park lock=True doorFL=False cabin=True readFL=True amb=On/80/#ffffff hvac=True recirc=True fan=3 temp=24.0 seat=0
+17:05:55 gear=Park lock=True doorFL=False cabin=True readFL=True amb=On/80/#ffffff hvac=True recirc=True fan=3 temp=24.0 seat=1
+17:06:09 gear=Park lock=False doorFL=False cabin=True readFL=True amb=On/80/#ffffff hvac=True recirc=True fan=3 temp=24.0 seat=1
+=== B 일어났어요 17:06:20
+17:06:22 gear=Park lock=True doorFL=False cabin=False readFL=False amb=On/80/#ffffff hvac=True recirc=False fan=1 temp=25.0 seat=1
+17:06:23 gear=Park lock=True doorFL=False cabin=False readFL=False amb=On/40/#ffffff hvac=True recirc=False fan=1 temp=25.0 seat=1
+17:06:24 gear=Park lock=True doorFL=False cabin=False readFL=False amb=On/0/#ffffff hvac=True recirc=False fan=1 temp=25.0 seat=1
+17:07:20 gear=Park lock=False doorFL=False cabin=False readFL=False amb=On/21/#ffffff hvac=True recirc=False fan=3 temp=21.0 seat=0
+17:07:22 gear=Park lock=False doorFL=False cabin=False readFL=False amb=On/80/#ffffff hvac=True recirc=False fan=3 temp=21.0 seat=0
+17:07:23 gear=Park lock=False doorFL=False cabin=True readFL=True amb=On/80/#ffffff hvac=True recirc=False fan=3 temp=21.0 seat=0
+17:07:25 gear=Park lock=False doorFL=False cabin=True readFL=True amb=On/80/#ffffff hvac=True recirc=True fan=3 temp=21.0 seat=0
+17:07:26 gear=Park lock=False doorFL=False cabin=True readFL=True amb=On/80/#ffffff hvac=True recirc=True fan=3 temp=24.0 seat=0
+17:07:28 gear=Park lock=False doorFL=False cabin=True readFL=True amb=On/80/#ffffff hvac=True recirc=True fan=3 temp=24.0 seat=1
+=== C 두번죽임 17:07:54
+17:07:57 gear=Park lock=True doorFL=False cabin=False readFL=False amb=On/64/#ffffff hvac=True recirc=False fan=1 temp=25.0 seat=1
+17:07:58 gear=Park lock=True doorFL=False cabin=False readFL=False amb=On/24/#ffffff hvac=True recirc=False fan=1 temp=25.0 seat=1
+17:07:59 gear=Park lock=True doorFL=False cabin=False readFL=False amb=On/0/#ffffff hvac=True recirc=False fan=1 temp=25.0 seat=1
+17:09:03 gear=Park lock=True doorFL=False cabin=True readFL=True amb=On/0/#ffffff hvac=True recirc=False fan=1 temp=25.0 seat=1
+17:09:04 gear=Park lock=True doorFL=False cabin=True readFL=True amb=On/80/#ffffff hvac=True recirc=False fan=1 temp=25.0 seat=1
+17:09:06 gear=Park lock=True doorFL=False cabin=True readFL=True amb=On/80/#ffffff hvac=True recirc=True fan=1 temp=25.0 seat=1
+17:09:07 gear=Park lock=True doorFL=False cabin=True readFL=True amb=On/80/#ffffff hvac=True recirc=True fan=3 temp=25.0 seat=1
+17:09:09 gear=Park lock=True doorFL=False cabin=True readFL=True amb=On/80/#ffffff hvac=True recirc=True fan=3 temp=24.0 seat=1
+17:09:23 gear=Park lock=False doorFL=False cabin=True readFL=True amb=On/80/#ffffff hvac=True recirc=True fan=3 temp=24.0 seat=1
+=== D 쉼알림 17:09:31
+17:09:32 gear=Drive lock=False doorFL=False cabin=True readFL=True amb=On/80/#ffffff hvac=True recirc=True fan=3 temp=24.0 seat=1
+17:10:54 gear=Park lock=False doorFL=False cabin=True readFL=True amb=On/80/#ffffff hvac=True recirc=True fan=3 temp=24.0 seat=1
+=== E 화면읽기 17:11:26
+17:11:29 gear=Park lock=True doorFL=False cabin=False readFL=False amb=On/64/#ffffff hvac=True recirc=False fan=1 temp=25.0 seat=1
+17:11:30 gear=Park lock=True doorFL=False cabin=False readFL=False amb=On/24/#ffffff hvac=True recirc=False fan=1 temp=25.0 seat=1
+17:11:31 gear=Park lock=True doorFL=False cabin=False readFL=False amb=On/0/#ffffff hvac=True recirc=False fan=1 temp=25.0 seat=1
+17:11:40 gear=Park lock=False doorFL=False cabin=False readFL=False amb=On/0/#ffffff hvac=True recirc=False fan=1 temp=25.0 seat=1
+17:11:42 gear=Park lock=False doorFL=False cabin=False readFL=False amb=On/80/#ffffff hvac=True recirc=False fan=1 temp=25.0 seat=1
+17:11:43 gear=Park lock=False doorFL=False cabin=True readFL=True amb=On/80/#ffffff hvac=True recirc=False fan=1 temp=25.0 seat=1
+17:11:45 gear=Park lock=False doorFL=False cabin=True readFL=True amb=On/80/#ffffff hvac=True recirc=True fan=1 temp=25.0 seat=1
+17:11:46 gear=Park lock=False doorFL=False cabin=True readFL=True amb=On/80/#ffffff hvac=True recirc=True fan=3 temp=25.0 seat=1
+17:11:48 gear=Park lock=False doorFL=False cabin=True readFL=True amb=On/80/#ffffff hvac=True recirc=True fan=3 temp=24.0 seat=1

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-feature
+        android:name="android.hardware.type.automotive"
+        android:required="true" />
+
+    <!-- Pleos Vehicle SDK 2.3.2 (각 api/*.kt의 Permission 설명과 implement/*Impl.kt의 검사 값) -->
+    <uses-permission android:name="pleos.car.permission.CAR_SEATS" />          <!-- 운전석 탑승, 시트 열선 읽기 -->
+    <uses-permission android:name="pleos.car.permission.CONTROL_CAR_SEATS" />  <!-- 시트 열선 끄기 -->
+    <uses-permission android:name="pleos.car.permission.CAR_DOORS" />          <!-- 문 열림, 잠금 읽기 -->
+    <uses-permission android:name="pleos.car.permission.CONTROL_CAR_DOORS" />  <!-- 문 잠금(쪽잠 동안 잠그고 되돌림) -->
+    <uses-permission android:name="pleos.car.permission.CAR_LIGHTS" />         <!-- 무드등, 실내등, 독서등 읽기 -->
+    <uses-permission android:name="pleos.car.permission.CONTROL_CAR_LIGHTS" /> <!-- 무드등, 실내등, 독서등 바꾸기 -->
+    <uses-permission android:name="pleos.car.permission.CAR_CLIMATE" />        <!-- 공조 읽기 -->
+    <uses-permission android:name="pleos.car.permission.CONTROL_CAR_CLIMATE" /><!-- 공조 바꾸기 -->
+    <uses-permission android:name="pleos.car.permission.CAR_DRIVE" />          <!-- 이번 주행의 달린 시간 -->
+
+    <!-- Pleos TextToSpeech SDK 3.3.1 -->
+    <uses-permission android:name="pleos.car.permission.TTS_SERVICE" />
+
+    <!-- AAOS 기어(GEAR_SELECTION) -->
+    <uses-permission android:name="android.car.permission.CAR_POWERTRAIN" />
+    <!-- AAOS 속도(PERF_VEHICLE_SPEED). 시험용 읽기에만 씀 -->
+    <uses-permission android:name="android.car.permission.CAR_SPEED" />
+
+    <!-- 쪽잠과 쉼 알림이 도는 동안만 앞에서 도는 서비스(CarlarmService) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- 깨울 때 칼람 화면이 앞에 없으면 '일어났어요' 버튼이 달린 알림(처음 켤 때 한 번 묻기) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <!-- 받침 알람: 앱이 짧은 사이에 여러 번 죽어도 깨울 때가 되면 시스템이 서비스를 깨움(알람 앱) -->
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" android:maxSdkVersion="32" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@android:drawable/ic_lock_idle_alarm"
+        android:label="칼람"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
+
+        <uses-library
+            android:name="android.car"
+            android:required="false" />
+
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboard|keyboardHidden|navigation|uiMode|density|fontScale|locale|layoutDirection"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <service
+            android:name=".CarlarmService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="쪽잠 타이머와 깨우기, 쉼 알림(달린 시간 세기)" />
+        </service>
+    </application>
+
+</manifest>

@@ -1,0 +1,272 @@
+11-15 14:35:28.650 I/ActivityManager(  765): Start proc 2844:kr.carlarm.app/u10a175 for top-activity {kr.carlarm.app/kr.carlarm.app.MainActivity}
+11-15 14:35:29.277 I/Carlarm ( 2844): 기어 P
+11-15 14:35:29.324 I/Carlarm ( 2844): 무드등 영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@987a8b25 범위 0~100
+11-15 14:35:29.331 I/Carlarm ( 2844): 풍량 영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@fffa41ea 범위 1~8
+11-15 14:35:29.334 I/Carlarm ( 2844): 온도 영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@7eec673 범위 15.0~30.0
+11-15 14:35:29.338 I/Carlarm ( 2844): 탑승 영역 5개 중 ai.pleos.playground.vehicle.api.model.area.SeatArea@7eec673
+11-15 14:35:29.422 I/Carlarm ( 2844): 말: 준비됨
+11-15 14:35:29.422 I/Carlarm ( 2844): 기어 P
+11-15 14:35:29.438 I/Carlarm ( 2844): 내기 순환 알림 등록함(영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@987a8b25)
+11-15 14:35:29.438 I/Carlarm ( 2844): 문 잠금 능력 접근 READ_WRITE, 영역 2개: HOOD, ROW_1_LEFT+ROW_1_RIGHT+ROW_2_LEFT+ROW_2_RIGHT
+11-15 14:35:29.445 I/Carlarm ( 2844): 내기 순환 알림 true
+11-15 14:36:34.035 I/Carlarm ( 2844): 차례 번호 1
+11-15 14:36:34.035 I/ActivityManager(  765): Background started FGS: Allowed [callingPackage: kr.carlarm.app; callingUid: 1010175; uidState: TOP ; uidBFSL: [BFSL]; intent: Intent { cmp=kr.carlarm.app/.CarlarmService }; code:PROC_STATE_TOP; tempAllowListReason:<null>; targetSdkVersion:34; callerTargetSdkVersion:34; startForegroundCount:0; bindFromPackage:null: isBindService:false]
+11-15 14:36:34.048 I/Carlarm ( 2844): 서비스 켜짐
+11-15 14:36:34.079 I/Carlarm ( 2844): 쉬기 전 값: 무드등 밝기=80, 무드등 색=16777215, 무드등 켜기=ON, 실내등=ON, 독서등=ON, 공조 전원=true, 공조 온도=24.0, 공조 풍량=3, 공조 순환=true, 시트 열선=1, 문 잠금=false
+11-15 14:36:34.089 I/Carlarm ( 2844): 시작 때 운전석 탑승=false (앉아 있던 경우에만 '자리가 빔'으로 되돌림)
+11-15 14:36:34.095 I/Carlarm ( 2844): 문 열림 알림 4개 등록함
+11-15 14:36:34.095 I/Carlarm ( 2844): 말 요청: 지하 주차장 같은 막힌 곳에서는 쓰지 마세요. 10분 뒤에 깨울게요.
+11-15 14:36:34.107 I/Carlarm ( 2844): 말: onStart
+11-15 14:36:37.609 I/Carlarm ( 2844): 문 잠금: 보냄 true (SDK 답 성공), 다시 읽음 true → 바뀜
+11-15 14:36:38.601 I/Carlarm ( 2844): 실내등: 보냄 OFF (SDK 답 성공), 다시 읽음 OFF → 바뀜
+11-15 14:36:38.603 I/Carlarm ( 2844): 독서등: 보냄 OFF (SDK 답 성공), 다시 읽음 OFF → 바뀜
+11-15 14:36:38.617 I/Carlarm ( 2844): 말: onDone
+11-15 14:36:39.097 I/Carlarm ( 2844): 내기 순환 알림 false
+11-15 14:36:39.115 I/Carlarm ( 2844): 소리: 시작
+11-15 14:36:40.599 I/Carlarm ( 2844): 공조 순환: 보냄 false (SDK 답 성공), 다시 읽음 false → 바뀜
+11-15 14:36:40.601 I/Carlarm ( 2844): 공조 풍량: 보냄 1 (SDK 답 성공), 다시 읽음 1 → 바뀜
+11-15 14:36:40.601 I/Carlarm ( 2844): 공조 온도: 보냄 25.0 (SDK 답 성공), 다시 읽음 25.0 → 바뀜
+11-15 14:37:39.101 I/Carlarm ( 2844): 무드등 밝기: 보냄 0 (SDK 답 성공), 다시 읽음 0 → 바뀜
+11-15 14:44:35.166 I/Carlarm ( 2844): 소리: 끝
+11-15 14:45:35.602 I/Carlarm ( 2844): 시트 열선: 보냄 0 (SDK 답 성공), 다시 읽음 0 → 바뀜
+11-15 14:45:35.604 I/Carlarm ( 2844): 공조 온도: 보냄 21.0 (SDK 답 성공), 다시 읽음 21.0 → 바뀜
+11-15 14:45:35.612 I/Carlarm ( 2844): 공조 풍량: 보냄 3 (SDK 답 성공), 다시 읽음 3 → 바뀜
+11-15 14:46:24.123 I/Carlarm ( 2844): 소리: 시작
+11-15 14:46:34.090 I/Carlarm ( 2844): 말 요청: 10분 쉬었어요. 일어날 시간이에요.
+11-15 14:46:34.103 I/Carlarm ( 2844): 말: onStart
+11-15 14:46:36.099 I/Carlarm ( 2844): 무드등 밝기: 보냄 70 (SDK 답 성공), 다시 읽음 70 → 바뀜
+11-15 14:46:36.861 I/Carlarm ( 2844): 말: onDone
+11-15 14:47:34.093 I/Carlarm ( 2844): 말 요청: 10분 쉬었어요. 일어날 시간이에요.
+11-15 14:47:34.107 I/Carlarm ( 2844): 말: onStart
+11-15 14:47:36.746 I/Carlarm ( 2844): 말: onDone
+11-15 14:48:34.089 I/Carlarm ( 2844): 말 요청: 10분 쉬었어요. 일어날 시간이에요.
+11-15 14:48:34.096 I/Carlarm ( 2844): 말: onStart
+11-15 14:48:36.691 I/Carlarm ( 2844): 말: onDone
+11-15 14:49:35.595 I/Carlarm ( 2844): 되돌림 시작: 깨운 뒤 3분이 지남
+11-15 14:49:35.595 I/Carlarm ( 2844): 차례 번호 2
+11-15 14:49:35.597 I/Carlarm ( 2844): 문 잠금은 잠근 채로 둠(깨운 뒤 답이 없음)
+11-15 14:49:35.807 I/Carlarm ( 2844): 소리: 끝
+11-15 14:49:37.178 I/Carlarm ( 2844): 무드등 밝기: 보냄 80 (SDK 답 성공), 다시 읽음 80 → 바뀜
+11-15 14:49:38.759 I/Carlarm ( 2844): 공조 순환: 보냄 true (SDK 답 성공), 다시 읽음 true → 바뀜
+11-15 14:49:40.291 I/Carlarm ( 2844): 공조 온도: 보냄 24.0 (SDK 답 성공), 다시 읽음 24.0 → 바뀜
+11-15 14:49:41.820 I/Carlarm ( 2844): 시트 열선: 보냄 1 (SDK 답 성공), 다시 읽음 1 → 바뀜
+11-15 14:49:41.821 I/Carlarm ( 2844): 말 요청: 문은 잠근 채로 두었어요. 완전히 깬 뒤에 출발하세요.
+11-15 14:49:41.822 I/Carlarm ( 2844): 되돌림 끝: 돌려놓음=[무드등 밝기, 공조 순환, 공조 온도, 시트 열선], 못 돌림=[], 그대로 둠=[문 잠금], 쉰 시간 781초
+11-15 14:49:41.825 I/Carlarm ( 2844): 말: onStart
+11-15 14:49:41.831 I/Carlarm ( 2844): 서비스 꺼짐
+11-15 14:49:45.631 I/Carlarm ( 2844): 말: onDone
+11-15 14:50:11.006 I/Carlarm ( 2844): 문 잠금: 보냄 false (SDK 답 성공), 다시 읽음 false → 바뀜
+11-15 14:50:11.006 I/Carlarm ( 2844): 문 잠금 풀기 됨
+11-15 14:51:05.340 I/Carlarm ( 2844): 차례 번호 3
+11-15 14:51:05.340 I/ActivityManager(  765): Background started FGS: Allowed [callingPackage: kr.carlarm.app; callingUid: 1010175; uidState: TOP ; uidBFSL: [BFSL]; intent: Intent { cmp=kr.carlarm.app/.CarlarmService }; code:PROC_STATE_TOP; tempAllowListReason:<null>; targetSdkVersion:34; callerTargetSdkVersion:34; startForegroundCount:0; bindFromPackage:null: isBindService:false]
+11-15 14:51:05.355 I/Carlarm ( 2844): 서비스 켜짐
+11-15 14:51:05.388 I/Carlarm ( 2844): 쉬기 전 값: 무드등 밝기=80, 무드등 색=16777215, 무드등 켜기=ON, 실내등=ON, 독서등=ON, 공조 전원=true, 공조 온도=24.0, 공조 풍량=3, 공조 순환=true, 시트 열선=1, 문 잠금=false
+11-15 14:51:05.396 I/Carlarm ( 2844): 시작 때 운전석 탑승=false (앉아 있던 경우에만 '자리가 빔'으로 되돌림)
+11-15 14:51:05.401 I/Carlarm ( 2844): 문 열림 알림 4개 등록함
+11-15 14:51:05.401 I/Carlarm ( 2844): 말 요청: 지하 주차장 같은 막힌 곳에서는 쓰지 마세요. 20분 뒤에 깨울게요.
+11-15 14:51:05.405 I/Carlarm ( 2844): 말: onStart
+11-15 14:51:05.591 I/Carlarm ( 2844): 소리: 시작
+11-15 14:51:06.972 I/Carlarm ( 2844): 문 잠금: 보냄 true (SDK 답 성공), 다시 읽음 true → 바뀜
+11-15 14:51:07.007 I/Carlarm ( 2844): 실내등: 보냄 OFF (SDK 답 성공), 다시 읽음 OFF → 바뀜
+11-15 14:51:07.008 I/Carlarm ( 2844): 독서등: 보냄 OFF (SDK 답 성공), 다시 읽음 OFF → 바뀜
+11-15 14:51:07.072 I/Carlarm ( 2844): 공조 풍량: 보냄 1 (SDK 답 성공), 다시 읽음 3 → 안 바뀜
+11-15 14:51:07.072 I/Carlarm ( 2844): 공조 순환: 보냄 false (SDK 답 성공), 다시 읽음 true → 안 바뀜
+11-15 14:51:07.073 I/Carlarm ( 2844): 공조 온도: 보냄 25.0 (SDK 답 성공), 다시 읽음 25.0 → 바뀜
+11-15 14:51:08.581 I/Carlarm ( 2844): 공조 순환: 보냄 false (SDK 답 성공), 다시 읽음 false → 바뀜
+11-15 14:51:08.582 I/Carlarm ( 2844): 공조 풍량: 보냄 1 (SDK 답 성공), 다시 읽음 1 → 바뀜
+11-15 14:51:09.032 I/Carlarm ( 2844): 무드등 밝기: 보냄 0 (SDK 답 성공), 다시 읽음 0 → 바뀜
+11-15 14:51:10.021 I/Carlarm ( 2844): 말: onDone
+11-15 14:51:12.404 W/ActivityManager(  765): crashApplication: nothing for uid=-1 initialPid=-1 packageName=kr.carlarm.app userId=0
+11-15 14:51:12.405 E/AndroidRuntime( 2844): FATAL EXCEPTION: main
+11-15 14:51:12.405 E/AndroidRuntime( 2844): Process: kr.carlarm.app, PID: 2844
+11-15 14:51:12.405 E/AndroidRuntime( 2844): android.app.RemoteServiceException$CrashedByAdbException: shell-induced crash
+11-15 14:51:12.405 E/AndroidRuntime( 2844): 	at android.app.ActivityThread.throwRemoteServiceException(ActivityThread.java:2095)
+11-15 14:51:12.405 E/AndroidRuntime( 2844): 	at android.app.ActivityThread.-$$Nest$mthrowRemoteServiceException(Unknown Source:0)
+11-15 14:51:12.405 E/AndroidRuntime( 2844): 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2374)
+11-15 14:51:12.405 E/AndroidRuntime( 2844): 	at android.os.Handler.dispatchMessage(Handler.java:106)
+11-15 14:51:12.405 E/AndroidRuntime( 2844): 	at android.os.Looper.loopOnce(Looper.java:205)
+11-15 14:51:12.405 E/AndroidRuntime( 2844): 	at android.os.Looper.loop(Looper.java:294)
+11-15 14:51:12.405 E/AndroidRuntime( 2844): 	at android.app.ActivityThread.main(ActivityThread.java:8194)
+11-15 14:51:12.405 E/AndroidRuntime( 2844): 	at java.lang.reflect.Method.invoke(Native Method)
+11-15 14:51:12.405 E/AndroidRuntime( 2844): 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:552)
+11-15 14:51:12.405 E/AndroidRuntime( 2844): 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:971)
+11-15 14:51:12.448 I/ActivityManager(  765): Process kr.carlarm.app (pid 2844) has died: vis TOP 
+11-15 14:51:12.462 W/ActivityManager(  765): Scheduling restart of crashed service kr.carlarm.app/.CarlarmService in 1000ms for start-requested
+11-15 14:51:13.491 I/ActivityManager(  765): Start proc 29621:kr.carlarm.app/u10a175 for service {kr.carlarm.app/kr.carlarm.app.CarlarmService}
+11-15 14:51:14.155 I/Carlarm (29621): 서비스 켜짐
+11-15 14:51:14.179 I/Carlarm (29621): 기어 P
+11-15 14:51:14.179 I/Carlarm (29621): 말: 준비됨
+11-15 14:51:14.179 I/Carlarm (29621): 기어 P
+11-15 14:51:14.210 I/Carlarm (29621): 무드등 영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@ea9ea1f 범위 0~100
+11-15 14:51:14.213 I/Carlarm (29621): 풍량 영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@5c27b1d2 범위 1~8
+11-15 14:51:14.214 I/Carlarm (29621): 온도 영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@b246a31 범위 15.0~30.0
+11-15 14:51:14.220 I/Carlarm (29621): 내기 순환 알림 등록함(영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@ea9ea1f)
+11-15 14:51:14.238 I/Carlarm (29621): 탑승 영역 5개 중 ai.pleos.playground.vehicle.api.model.area.SeatArea@b246a31
+11-15 14:51:14.242 I/Carlarm (29621): 문 잠금 능력 접근 READ_WRITE, 영역 2개: HOOD, ROW_1_LEFT+ROW_1_RIGHT+ROW_2_LEFT+ROW_2_RIGHT
+11-15 14:51:14.252 I/Carlarm (29621): 내기 순환 알림 false
+11-15 14:51:16.659 I/Carlarm (29621): 차례 번호 1
+11-15 14:51:16.659 I/Carlarm (29621): 되살림: 시작 뒤 337초(차례 기준), 20분 쪽잠, 쉬기 전 값 11개, 상태 ASLEEP
+11-15 14:51:16.660 I/Carlarm (29621): 문 열림 알림 4개 등록함
+11-15 14:51:16.661 I/Carlarm (29621): 되살림: 입면 소리는 다시 켜지 않음(자는 사람을 놀라게 하지 않으려고)
+11-15 14:51:44.911 I/Carlarm (29621): 공조 온도: 보냄 21.0 (SDK 답 성공), 다시 읽음 21.0 → 바뀜
+11-15 14:51:44.912 I/Carlarm (29621): 시트 열선: 보냄 0 (SDK 답 성공), 다시 읽음 0 → 바뀜
+11-15 14:51:44.919 I/Carlarm (29621): 공조 풍량: 보냄 3 (SDK 답 성공), 다시 읽음 3 → 바뀜
+11-15 14:51:45.092 I/Carlarm (29621): 소리: 시작
+11-15 14:51:45.397 I/Carlarm (29621): 말 요청: 20분 쉬었어요. 일어날 시간이에요.
+11-15 14:51:45.402 I/Carlarm (29621): 말: onStart
+11-15 14:51:45.491 I/Carlarm (29621): 기어 D
+11-15 14:51:45.491 I/Carlarm (29621): 되돌림 시작: 기어가 P를 벗어남
+11-15 14:51:45.491 I/Carlarm (29621): 차례 번호 2
+11-15 14:51:45.516 I/Carlarm (29621): 문 잠금 실패 java.lang.Exception: java.lang.IllegalArgumentException: 50001
+11-15 14:51:45.643 I/Carlarm (29621): 소리: 끝
+11-15 14:51:46.917 I/Carlarm (29621): 무드등 밝기: 앞 차례(1)의 다시 읽기를 버림(보낸 값 70)
+11-15 14:51:47.019 I/Carlarm (29621): 문 잠금: 보냄 false (SDK 답 실패), 다시 읽음 true → 안 바뀜
+11-15 14:51:47.020 I/Carlarm (29621): 문 잠금 실패 java.lang.Exception: java.lang.IllegalArgumentException: 50001
+11-15 14:51:48.210 I/Carlarm (29621): 말: onDone
+11-15 14:51:48.523 I/Carlarm (29621): 문 잠금: 보냄 false (SDK 답 실패), 다시 읽음 true → 안 바뀜
+11-15 14:51:50.042 I/Carlarm (29621): 무드등 밝기: 보냄 80 (SDK 답 성공), 다시 읽음 80 → 바뀜
+11-15 14:51:51.554 I/Carlarm (29621): 실내등: 보냄 ON (SDK 답 실패), 다시 읽음 OFF → 안 바뀜
+11-15 14:51:53.064 I/Carlarm (29621): 실내등: 보냄 ON (SDK 답 실패), 다시 읽음 OFF → 안 바뀜
+11-15 14:51:53.831 I/Carlarm (29621): 기어 P
+11-15 14:51:54.588 I/Carlarm (29621): 독서등: 보냄 ON (SDK 답 실패), 다시 읽음 OFF → 안 바뀜
+11-15 14:51:56.119 I/Carlarm (29621): 독서등: 보냄 ON (SDK 답 성공), 다시 읽음 ON → 바뀜
+11-15 14:51:57.633 I/Carlarm (29621): 공조 순환: 보냄 true (SDK 답 성공), 다시 읽음 true → 바뀜
+11-15 14:51:59.147 I/Carlarm (29621): 공조 온도: 보냄 24.0 (SDK 답 성공), 다시 읽음 24.0 → 바뀜
+11-15 14:52:00.662 I/Carlarm (29621): 시트 열선: 보냄 1 (SDK 답 성공), 다시 읽음 1 → 바뀜
+11-15 14:52:00.663 I/Carlarm (29621): 말 요청: 완전히 깬 뒤에 출발하세요.
+11-15 14:52:00.663 I/Carlarm (29621): 되돌림 끝: 돌려놓음=[무드등 밝기, 독서등, 공조 순환, 공조 온도, 시트 열선], 못 돌림=[문 잠금, 실내등], 그대로 둠=[], 쉰 시간 1204초
+11-15 14:52:00.663 I/Carlarm (29621): P에 서서 마저 돌려놓기: [문 잠금, 실내등]
+11-15 14:52:00.668 I/Carlarm (29621): 말: onStart
+11-15 14:52:00.713 I/Carlarm (29621): 서비스 꺼짐
+11-15 14:52:02.215 I/Carlarm (29621): 문 잠금: 보냄 false (SDK 답 성공), 다시 읽음 false → 바뀜
+11-15 14:52:02.215 I/Carlarm (29621): P에서 문 잠금 돌려놓음
+11-15 14:52:02.756 I/Carlarm (29621): 말: onDone
+11-15 14:52:03.731 I/Carlarm (29621): 실내등: 보냄 ON (SDK 답 성공), 다시 읽음 ON → 바뀜
+11-15 14:52:03.731 I/Carlarm (29621): P에서 실내등 돌려놓음
+11-15 14:52:41.235 I/ActivityManager(  765): Force stopping kr.carlarm.app appid=10175 user=-1: installPackageLI
+11-15 14:52:41.237 I/ActivityManager(  765): Killing 29621:kr.carlarm.app/u10a175 (adj 906): stop kr.carlarm.app due to installPackageLI
+11-15 14:52:42.233 I/ActivityManager(  765): Force stopping kr.carlarm.app appid=10175 user=10: pkg removed
+11-15 14:52:42.270 I/ActivityManager(  765): Force stopping kr.carlarm.app appid=10175 user=0: pkg removed
+11-15 14:52:47.730 I/ActivityManager(  765): Start proc 16359:kr.carlarm.app/u10a175 for top-activity {kr.carlarm.app/kr.carlarm.app.MainActivity}
+11-15 14:52:48.612 I/Carlarm (16359): 기어 P
+11-15 14:52:48.623 I/Carlarm (16359): 말: 준비됨
+11-15 14:52:48.623 I/Carlarm (16359): 기어 P
+11-15 14:52:48.669 I/Carlarm (16359): 무드등 영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@3630f71d 범위 0~100
+11-15 14:52:48.671 I/Carlarm (16359): 풍량 영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@aaddce8a 범위 1~8
+11-15 14:52:48.673 I/Carlarm (16359): 탑승 영역 5개 중 ai.pleos.playground.vehicle.api.model.area.SeatArea@539492b
+11-15 14:52:48.673 I/Carlarm (16359): 온도 영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@539492b 범위 15.0~30.0
+11-15 14:52:48.679 I/Carlarm (16359): 내기 순환 알림 등록함(영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@3630f71d)
+11-15 14:52:48.680 I/Carlarm (16359): 문 잠금 능력 접근 READ_WRITE, 영역 2개: HOOD, ROW_1_LEFT+ROW_1_RIGHT+ROW_2_LEFT+ROW_2_RIGHT
+11-15 14:52:48.712 I/Carlarm (16359): 내기 순환 알림 true
+11-15 14:52:58.699 I/Carlarm (16359): 쉼 알림 켬(첫째 답 2, 둘째 답 비트 1, 달린 시간 기준 90분, 지금 14시, 환기 40분, 한 주행 3번까지)
+11-15 14:52:58.701 I/ActivityManager(  765): Background started FGS: Allowed [callingPackage: kr.carlarm.app; callingUid: 1010175; uidState: TOP ; uidBFSL: [BFSL]; intent: Intent { cmp=kr.carlarm.app/.CarlarmService }; code:PROC_STATE_TOP; tempAllowListReason:<null>; targetSdkVersion:34; callerTargetSdkVersion:34; startForegroundCount:0; bindFromPackage:null: isBindService:false]
+11-15 14:52:58.723 I/Carlarm (16359): 서비스 켜짐
+11-15 14:52:59.152 I/Carlarm (16359): 쉼 알림 끔
+11-15 14:52:59.158 I/Carlarm (16359): 서비스 꺼짐
+11-15 14:52:59.621 I/Carlarm (16359): 쉼 알림 켬(첫째 답 2, 둘째 답 비트 1, 달린 시간 기준 90분, 지금 14시, 환기 40분, 한 주행 3번까지)
+11-15 14:52:59.622 I/ActivityManager(  765): Background started FGS: Allowed [callingPackage: kr.carlarm.app; callingUid: 1010175; uidState: TOP ; uidBFSL: [BFSL]; intent: Intent { cmp=kr.carlarm.app/.CarlarmService }; code:PROC_STATE_TOP; tempAllowListReason:<null>; targetSdkVersion:34; callerTargetSdkVersion:34; startForegroundCount:0; bindFromPackage:null: isBindService:false]
+11-15 14:52:59.638 I/Carlarm (16359): 서비스 켜짐
+11-15 14:53:00.708 I/Carlarm (16359): 기어 D
+11-15 14:54:20.807 I/Carlarm (16359): 쉼 알림: 내기 순환으로 달린 시간 40분, 기어 D, 이번 주행 1번째 말: 내기 순환으로 40분 달렸으니 바깥 공기로 바꾸거나 쉬어 가요.
+11-15 14:54:20.807 I/Carlarm (16359): 말 요청: 내기 순환으로 40분 달렸으니 바깥 공기로 바꾸거나 쉬어 가요.
+11-15 14:54:20.821 I/Carlarm (16359): 말: onStart
+11-15 14:54:25.147 I/Carlarm (16359): 말: onDone
+11-15 14:54:26.809 I/Carlarm (16359): 쉼 알림 말하기 신호: 시작과 끝 신호가 왔어요
+11-15 14:55:20.917 I/Carlarm (16359): 쉼 알림: 권한 뒤 쉬지 않고 30분, 기어 D, 이번 주행 2번째 말: 바깥 공기로 바꿔 보세요.
+11-15 14:55:20.918 I/Carlarm (16359): 말 요청: 바깥 공기로 바꿔 보세요.
+11-15 14:55:20.924 I/Carlarm (16359): 말: onStart
+11-15 14:55:22.786 I/Carlarm (16359): 말: onDone
+11-15 14:55:26.919 I/Carlarm (16359): 쉼 알림 말하기 신호: 시작과 끝 신호가 왔어요
+11-15 14:56:00.991 I/Carlarm (16359): 쉼 알림: 달린 시간 90분, 기준 90분, 기어 D, 이번 주행 3번째 말: 한 시간 반 달렸으니 다음 쉼터에서 쉬어 가요.
+11-15 14:56:00.991 I/Carlarm (16359): 말 요청: 한 시간 반 달렸으니 다음 쉼터에서 쉬어 가요.
+11-15 14:56:01.004 I/Carlarm (16359): 말: onStart
+11-15 14:56:04.196 I/Carlarm (16359): 말: onDone
+11-15 14:56:06.995 I/Carlarm (16359): 쉼 알림 말하기 신호: 시작과 끝 신호가 왔어요
+11-15 14:56:23.375 I/Carlarm (16359): 기어 P
+11-15 14:56:53.073 I/Carlarm (16359): P에 15분 넘게 서 있어 센 시간을 0으로
+11-15 14:57:24.813 I/Carlarm (16359): 쉼 알림 끔
+11-15 14:57:24.822 I/Carlarm (16359): 서비스 꺼짐
+11-15 14:57:36.165 I/Carlarm (16359): 차례 번호 1
+11-15 14:57:36.165 I/ActivityManager(  765): Background started FGS: Allowed [callingPackage: kr.carlarm.app; callingUid: 1010175; uidState: TOP ; uidBFSL: [BFSL]; intent: Intent { cmp=kr.carlarm.app/.CarlarmService }; code:PROC_STATE_TOP; tempAllowListReason:<null>; targetSdkVersion:34; callerTargetSdkVersion:34; startForegroundCount:0; bindFromPackage:null: isBindService:false]
+11-15 14:57:36.176 I/Carlarm (16359): 서비스 켜짐
+11-15 14:57:36.219 I/Carlarm (16359): 쉬기 전 값: 무드등 밝기=80, 무드등 색=16777215, 무드등 켜기=ON, 실내등=ON, 독서등=ON, 공조 전원=false, 공조 온도=24.0, 공조 풍량=3, 공조 순환=true, 시트 열선=2, 문 잠금=false
+11-15 14:57:36.227 I/Carlarm (16359): 시작 때 운전석 탑승=false (앉아 있던 경우에만 '자리가 빔'으로 되돌림)
+11-15 14:57:36.236 I/Carlarm (16359): 문 열림 알림 4개 등록함
+11-15 14:57:36.237 I/Carlarm (16359): 말 요청: 지하 주차장 같은 막힌 곳에서는 쓰지 마세요. 10분 뒤에 깨울게요.
+11-15 14:57:36.255 I/Carlarm (16359): 말: onStart
+11-15 14:57:36.414 I/Carlarm (16359): 소리: 시작
+11-15 14:57:37.808 I/Carlarm (16359): 문 잠금: 보냄 true (SDK 답 성공), 다시 읽음 true → 바뀜
+11-15 14:57:37.841 I/Carlarm (16359): 실내등: 보냄 OFF (SDK 답 성공), 다시 읽음 OFF → 바뀜
+11-15 14:57:37.844 I/Carlarm (16359): 독서등: 보냄 OFF (SDK 답 성공), 다시 읽음 OFF → 바뀜
+11-15 14:57:39.870 I/Carlarm (16359): 무드등 밝기: 보냄 0 (SDK 답 성공), 다시 읽음 0 → 바뀜
+11-15 14:57:40.837 I/Carlarm (16359): 말: onDone
+11-15 14:57:52.431 I/Carlarm (16359): 소리: 끝
+11-15 14:57:55.782 I/Carlarm (16359): 시트 열선: 보냄 0 (SDK 답 성공), 다시 읽음 0 → 바뀜
+11-15 14:57:55.930 I/Carlarm (16359): 소리: 시작
+11-15 14:57:56.229 I/Carlarm (16359): 말 요청: 10분 쉬었어요. 일어날 시간이에요.
+11-15 14:57:56.288 I/Carlarm (16359): 말: onStart
+11-15 14:57:57.757 I/Carlarm (16359): 무드등 밝기: 보냄 70 (SDK 답 성공), 다시 읽음 70 → 바뀜
+11-15 14:57:58.228 I/Carlarm (16359): 말 요청: 10분 쉬었어요. 일어날 시간이에요.
+11-15 14:57:58.235 I/Carlarm (16359): 말: onStart
+11-15 14:58:00.231 I/Carlarm (16359): 말 요청: 10분 쉬었어요. 일어날 시간이에요.
+11-15 14:58:00.252 I/Carlarm (16359): 말: onStart
+11-15 14:58:02.841 I/Carlarm (16359): 말: onDone
+11-15 14:58:03.728 I/Carlarm (16359): 되돌림 시작: 깨운 뒤 3분이 지남
+11-15 14:58:03.729 I/Carlarm (16359): 차례 번호 2
+11-15 14:58:03.731 I/Carlarm (16359): 문 잠금은 잠근 채로 둠(깨운 뒤 답이 없음)
+11-15 14:58:03.880 I/Carlarm (16359): 소리: 끝
+11-15 14:58:05.259 I/Carlarm (16359): 무드등 밝기: 보냄 80 (SDK 답 성공), 다시 읽음 80 → 바뀜
+11-15 14:58:06.799 I/Carlarm (16359): 시트 열선: 보냄 2 (SDK 답 성공), 다시 읽음 2 → 바뀜
+11-15 14:58:06.800 I/Carlarm (16359): 말 요청: 문은 잠근 채로 두었어요. 완전히 깬 뒤에 출발하세요.
+11-15 14:58:06.802 I/Carlarm (16359): 되돌림 끝: 돌려놓음=[무드등 밝기, 시트 열선], 못 돌림=[], 그대로 둠=[문 잠금], 쉰 시간 826초
+11-15 14:58:06.805 I/Carlarm (16359): 말: onStart
+11-15 14:58:06.825 I/Carlarm (16359): 서비스 꺼짐
+11-15 14:58:10.637 I/Carlarm (16359): 말: onDone
+11-15 14:58:18.822 I/Carlarm (16359): 문 잠금: 보냄 false (SDK 답 성공), 다시 읽음 false → 바뀜
+11-15 14:58:18.822 I/Carlarm (16359): 문 잠금 풀기 됨
+11-15 14:58:28.068 I/Carlarm (16359): 차례 번호 3
+11-15 14:58:28.068 I/ActivityManager(  765): Background started FGS: Allowed [callingPackage: kr.carlarm.app; callingUid: 1010175; uidState: TOP ; uidBFSL: [BFSL]; intent: Intent { cmp=kr.carlarm.app/.CarlarmService }; code:PROC_STATE_TOP; tempAllowListReason:<null>; targetSdkVersion:34; callerTargetSdkVersion:34; startForegroundCount:0; bindFromPackage:null: isBindService:false]
+11-15 14:58:28.080 I/Carlarm (16359): 서비스 켜짐
+11-15 14:58:28.117 I/Carlarm (16359): 쉬기 전 값: 무드등 밝기=80, 무드등 색=16777215, 무드등 켜기=ON, 실내등=ON, 독서등=ON, 공조 전원=true, 공조 온도=24.0, 공조 풍량=3, 공조 순환=true, 시트 열선=1, 문 잠금=false
+11-15 14:58:28.125 I/Carlarm (16359): 시작 때 운전석 탑승=false (앉아 있던 경우에만 '자리가 빔'으로 되돌림)
+11-15 14:58:28.130 I/Carlarm (16359): 문 열림 알림 4개 등록함
+11-15 14:58:28.131 I/Carlarm (16359): 말 요청: 지하 주차장 같은 막힌 곳에서는 쓰지 마세요. 10분 뒤에 깨울게요.
+11-15 14:58:28.136 I/Carlarm (16359): 말: onStart
+11-15 14:58:28.301 I/Carlarm (16359): 내기 순환 알림 false
+11-15 14:58:28.319 I/Carlarm (16359): 소리: 시작
+11-15 14:58:29.698 I/Carlarm (16359): 문 잠금: 보냄 true (SDK 답 성공), 다시 읽음 true → 바뀜
+11-15 14:58:29.738 I/Carlarm (16359): 실내등: 보냄 OFF (SDK 답 성공), 다시 읽음 OFF → 바뀜
+11-15 14:58:29.740 I/Carlarm (16359): 독서등: 보냄 OFF (SDK 답 성공), 다시 읽음 OFF → 바뀜
+11-15 14:58:29.805 I/Carlarm (16359): 공조 풍량: 보냄 1 (SDK 답 성공), 다시 읽음 1 → 바뀜
+11-15 14:58:29.805 I/Carlarm (16359): 공조 순환: 보냄 false (SDK 답 성공), 다시 읽음 false → 바뀜
+11-15 14:58:29.805 I/Carlarm (16359): 공조 온도: 보냄 25.0 (SDK 답 성공), 다시 읽음 25.0 → 바뀜
+11-15 14:58:31.770 I/Carlarm (16359): 무드등 밝기: 보냄 0 (SDK 답 성공), 다시 읽음 0 → 바뀜
+11-15 14:58:32.140 I/Carlarm (16359): 문 열림 알림 [ROW_1_LEFT] = 1
+11-15 14:58:32.140 I/Carlarm (16359): 되돌림 시작: 문이 열림
+11-15 14:58:32.140 I/Carlarm (16359): 차례 번호 4
+11-15 14:58:32.310 I/Carlarm (16359): 소리: 끝
+11-15 14:58:32.637 I/Carlarm (16359): 말: onDone
+11-15 14:58:33.667 I/Carlarm (16359): 문 잠금: 보냄 false (SDK 답 성공), 다시 읽음 false → 바뀜
+11-15 14:58:35.197 I/Carlarm (16359): 무드등 밝기: 보냄 80 (SDK 답 성공), 다시 읽음 80 → 바뀜
+11-15 14:58:36.719 I/Carlarm (16359): 실내등: 보냄 ON (SDK 답 성공), 다시 읽음 ON → 바뀜
+11-15 14:58:38.240 I/Carlarm (16359): 공조 순환: 보냄 true (SDK 답 성공), 다시 읽음 true → 바뀜
+11-15 14:58:39.755 I/Carlarm (16359): 공조 풍량: 보냄 3 (SDK 답 성공), 다시 읽음 3 → 바뀜
+11-15 14:58:41.268 I/Carlarm (16359): 공조 온도: 보냄 24.0 (SDK 답 성공), 다시 읽음 24.0 → 바뀜
+11-15 14:58:41.277 I/Carlarm (16359): 말 요청: 완전히 깬 뒤에 출발하세요.
+11-15 14:58:41.278 I/Carlarm (16359): 되돌림 끝: 돌려놓음=[문 잠금, 무드등 밝기, 실내등, 공조 순환, 공조 풍량, 공조 온도], 못 돌림=[], 그대로 둠=[], 쉰 시간 122초
+11-15 14:58:41.283 I/Carlarm (16359): 말: onStart
+11-15 14:58:41.299 I/Carlarm (16359): 서비스 꺼짐
+11-15 14:58:43.351 I/Carlarm (16359): 말: onDone
+11-15 14:58:58.072 I/Carlarm (16359): 차례 번호 5
+11-15 14:58:58.073 I/ActivityManager(  765): Background started FGS: Allowed [callingPackage: kr.carlarm.app; callingUid: 1010175; uidState: TOP ; uidBFSL: [BFSL]; intent: Intent { cmp=kr.carlarm.app/.CarlarmService }; code:PROC_STATE_TOP; tempAllowListReason:<null>; targetSdkVersion:34; callerTargetSdkVersion:34; startForegroundCount:0; bindFromPackage:null: isBindService:false]
+11-15 14:58:58.090 I/Carlarm (16359): 서비스 켜짐
+11-15 14:58:58.127 I/Carlarm (16359): 쉬기 전 값: 무드등 밝기=80, 무드등 색=16777215, 무드등 켜기=ON, 실내등=ON, 독서등=ON, 공조 전원=true, 공조 온도=24.0, 공조 풍량=3, 공조 순환=true, 시트 열선=1, 문 잠금=false
+11-15 14:58:58.138 I/Carlarm (16359): 기어 D
+11-15 14:58:58.138 I/Carlarm (16359): 되돌림 시작: 기어가 P를 벗어남
+11-15 14:58:58.138 I/Carlarm (16359): 차례 번호 6
+11-15 14:58:58.181 I/Carlarm (16359): 말 요청: 완전히 깬 뒤에 출발하세요.
+11-15 14:58:58.182 I/Carlarm (16359): 되돌림 끝: 돌려놓음=[], 못 돌림=[], 그대로 둠=[], 쉰 시간 1초
+11-15 14:58:58.187 I/Carlarm (16359): 말: onStart
+11-15 14:58:58.196 I/Carlarm (16359): 서비스 꺼짐
+11-15 14:59:00.269 I/Carlarm (16359): 말: onDone
+11-15 14:59:07.186 I/Carlarm (16359): 기어 P
