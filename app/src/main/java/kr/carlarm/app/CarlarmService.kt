@@ -28,6 +28,7 @@ class CarlarmService : Service() {
         Records.init(this)
         Car.start(this)
         Voice.start(this)
+        Road.start(this)
         goForeground()
         wake = (getSystemService(Context.POWER_SERVICE) as PowerManager)
             .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "carlarm:keep").apply {

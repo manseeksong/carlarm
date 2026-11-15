@@ -48,6 +48,7 @@ class MainActivity : Activity() {
         Records.init(this)
         Car.start(this)
         Voice.start(this)
+        Road.start(this)
         Nap.fast = prefs.getBoolean("fast", false)
         // Nap.onGear()는 Car가 기어 콜백에서 직접 부릅니다(여기서 부르면 두 번 불림).
         Car.onGear = {
@@ -141,6 +142,31 @@ class MainActivity : Activity() {
             "aaos" -> Car.readAaos()
             "lockcap" -> Car.checkLock { r -> log("장치 시험: 문 잠금 능력 $r") }
             "trip" -> Car.tripMinutes { m -> log("장치 시험: 달린 시간 $m (오류: ${Car.tripError})") }
+            // 0.4
+            "vent" -> run(Car.seatVent, v.toInt())
+            "defrost" -> run(Car.defrost, v == "true")
+            "clean" -> run(Car.airCleaner, v == "true")
+            "fandir" -> run(Car.fanDir, ai.pleos.playground.vehicle.constant.control.FanDirectionType.valueOf(v))
+            "wheel" -> run(Car.wheelHeat, v.toInt())
+            "mirror" -> run(Car.mirrorHeat, v.toInt())
+            "wlock" -> run(Car.windowLock, v == "true")
+            "win" -> run(Car.windows[v.substringBefore(",").toInt()], v.substringAfter(",").toInt())
+            "glass" -> run(Car.smartGlass, v == "true")
+            "blind" -> Car.blind(v != "open") { r -> log("장치 시험: $r") }
+            "cabintemp" -> Car.cabinTemp { t -> log("장치 시험: 실내 온도 $t") }
+            "rear" -> Car.rearOccupied { r, st -> log("장치 시험: 뒷자리 $st → $r") }
+            "windows" -> Car.windowsOpen { o, st -> log("장치 시험: 창 $st → 열림 $o") }
+            "pose" -> Car.axes.forEach { ax -> Car.readAxis(ax) { now -> log("장치 시험: ${ax.name} 위치 $now (범위 ${ax.min}~${ax.max}, 능력 ${ax.known})") } }
+            "move" -> { val ax = Car.axes.first { it.key == v.substringBefore(",") }; Car.moveTo(ax, v.substringAfter(",").toInt()) { end -> log("장치 시험: ${ax.name} 목표 ${v.substringAfter(",")} → 멈춘 뒤 $end") } }
+            "navi" -> Road.restAhead { a -> log("장치 시험: 앞쪽 쉼터 $a (${Road.status})") }
+            "learn" -> if (v == "clear") Learn.clear() else log("장치 시험: 맞춘 값 ${Learn.line()} / 자세 ${Learn.pose()} / 방 ${Learn.room()} / 권하는 때 ${Learn.avgDriven()}")
+            "nap" -> { prefs.edit().putBoolean("fast", true).apply(); Nap.fast = true; log("장치 시험: 쪽잠 시작 ${Nap.start(v.substringBefore(",").toIntOrNull() ?: 10, 1, rear = v.substringAfter(",", "") == "rear")}") }
+            "woke" -> Nap.restore("일어났어요를 누름(시험)")
+            "fast" -> { Nap.fast = v == "on"; prefs.edit().putBoolean("fast", Nap.fast).apply(); fastDot.visibility = if (Nap.fast) View.VISIBLE else View.GONE; log("장치 시험: 빠르게 보기 ${Nap.fast}") }
+            "remind" -> { if (v == "off") Remind.stop() else Remind.start(prefs.getInt("q1", -1), prefs.getInt("q2", 0)); log("장치 시험: 쉼 알림 ${Remind.on}, 기준 ${Remind.thresholdMin()}분(맞춘 평균 ${Learn.avgDriven()})") }
+            "threshold" -> log("장치 시험: 권하는 때 ${Remind.thresholdMin()}분(맞춘 평균 ${Learn.avgDriven()}, 첫째 답 ${prefs.getInt("q1", -1)}), 달린 시간 ${Remind.drivenMin.toInt()}분")
+            "prep" -> if (Nap.state == State.IDLE) go("prep")
+            "home" -> { if (Nap.state == State.RESTORED) Nap.finish(); if (Nap.state == State.IDLE) go("home") }
         }
     }
 
@@ -334,7 +360,7 @@ class MainActivity : Activity() {
         return (a.optJSONObject(a.length() - 1)?.optInt("sec") ?: 0).let { (it / 60.0).roundToInt() }
     }
 
-    private fun phrase(min: Int) = when (min) { 60 -> "한 시간"; 90 -> "한 시간 반"; else -> "두 시간" }
+    private fun phrase(min: Int) = Remind.phrase(min)
 
     /** "오후 7시 13분에 깨울게요" (분이 0이면 "오후 7시에 깨울게요") */
     private fun wakeLine(secFromNow: Int): String {
@@ -555,13 +581,14 @@ class MainActivity : Activity() {
         inner.addView(label("쉴 시간", 28, Ui.W84, 500, 44, center = true))
         val clk = clock().apply { set("$pick", "분") }
         inner.addView(clk.view, lp(WRAP, WRAP).apply { topMargin = dp(8) })
-        left.addView(ringBox(ring, inner), lp(MATCH, dp(576)))
+        left.addView(ringBox(ring, inner, 480), lp(MATCH, dp(480)))
         left.addView(View(this).apply { setBackgroundColor(Ui.W10) }, lp(MATCH, 1).apply { topMargin = dp(24) })
         left.addView(label("쉬는 동안 차가 하는 일", 24, Ui.W64, 600, 32), lp(MATCH, WRAP).apply { topMargin = dp(24) })
         val does = row(Gravity.TOP)
         var airName: TextView? = null
         var airValue: TextView? = null
-        listOf(Triple("lock", "문 잠금", "쉬는 동안만"), Triple("bulb", "빛", "무드등 0%로"), Triple("note", "소리", "잠들 때의 소리"), Triple("air", "바깥 공기", "바람 1단계, 온도 +1℃")).forEach { (ic, name, v) ->
+        var seatValue: TextView? = null
+        listOf(Triple("lock", "문과 창 잠금", "쉬는 동안만"), Triple("bulb", "빛", "노을빛으로 0%"), Triple("seat", "시트", "편히 눕혀요"), Triple("note", "소리", "잠들 때의 소리"), Triple("air", "바깥 공기", "바람 1단계, 온도 +1℃")).forEach { (ic, name, v) ->
             val col = innerCol()
             val circle = FrameLayout(this).apply { background = oval(Ui.TRACK) }
             circle.addView(IconView(this, ic, Ui.WHITE), FrameLayout.LayoutParams(dp(32), dp(32), Gravity.CENTER))
@@ -571,25 +598,33 @@ class MainActivity : Activity() {
             col.addView(nt, lp(WRAP, WRAP).apply { topMargin = dp(8) })
             col.addView(vt, lp(WRAP, WRAP))
             if (ic == "air") { airName = nt; airValue = vt }
+            if (ic == "seat") seatValue = vt
             does.addView(col, lp(0, WRAP, 1f))
         }
         left.addView(does, lp(MATCH, WRAP).apply { topMargin = dp(16) })
         // 공조가 꺼져 있으면 공기는 그대로 둡니다(Nap의 5초 차례와 같은 조건).
         Car.hvacPower.get { on ->
             if (on == false) { airName?.text = "공기"; airValue?.text = "그대로 둬요" }
-            else if (on == true) Car.temp.get { t -> if (t != null) airValue?.text = "바람 1단계, ${(t + 1f).let { if (it % 1f == 0f) it.toInt().toString() else it.toString() }}℃" }
+            else if (on == true) Car.temp.get { t ->
+                val mem = Learn.room()
+                if (mem != null) airValue?.text = "바람 ${mem.second}단계, ${fmtT(mem.first)}℃"
+                else if (t != null) Car.cabinTemp { c ->
+                    val dt = when { c == null -> 1f; c < 22f -> 1f; c > 26f -> -1f; else -> 0f }
+                    airValue?.text = "바람 ${if (c != null && c > 26f) 2 else 1}단계, ${fmtT((t + dt).coerceIn(Car.tempMin, Car.tempMax))}℃"
+                }
+            }
         }
 
         val right = column()
         val (band, bandText) = alertBand("door", "")
         band.visibility = View.GONE
-        right.addView(band, lp(MATCH, WRAP).apply { bottomMargin = dp(32) })
+        right.addView(band, lp(MATCH, WRAP).apply { bottomMargin = dp(24) })
         right.addView(bigText("얼마나 쉴까요?"))
         val pickRow = row()
         val wake = label("", 30, Ui.ACCENT, 700, 48)
         val start = Btn(this, Btn.Kind.PRIMARY, "", "moon")
         val cells = listOf(10, 15, 20, 30).mapIndexed { i, m ->
-            MinuteCell(this, m, hasLast && m == last).also { pickRow.addView(it, lp(0, dp(128), 1f).apply { if (i > 0) leftMargin = dp(16) }) }
+            MinuteCell(this, m, hasLast && m == last).also { pickRow.addView(it, lp(0, dp(112), 1f).apply { if (i > 0) leftMargin = dp(16) }) }
         }
         fun paint() {
             cells.forEach { it.mark(it.minutes == pick) }
@@ -600,37 +635,111 @@ class MainActivity : Activity() {
         }
         cells.forEach { c -> c.setOnClickListener { pick = c.minutes; paint() } }
         paint()
-        right.addView(pickRow, lp(MATCH, WRAP).apply { topMargin = dp(40) })
-        right.addView(wake, lp(MATCH, WRAP).apply { topMargin = dp(24) })
+        right.addView(pickRow, lp(MATCH, WRAP).apply { topMargin = dp(32) })
+        right.addView(wake, lp(MATCH, WRAP).apply { topMargin = dp(16) })
+
+        // 뒷자리 확인: 탑승 값이 '있음'이거나 모르면 묻습니다. '있어요'면 등받이 눕히기와 뒤로 밀기를 하지 않습니다.
+        var rearRead: Boolean? = null
+        var rearReadDone = false
+        var rearAns: Boolean? = null
+        val rearBox = row().apply { visibility = View.GONE }
+        val rearQ = label("뒷자리에 사람이나 짐이 있나요?", 28, Ui.WHITE, 700, 44)
+        rearBox.addView(rearQ, lp(0, WRAP, 1f))
+        val yes = label("있어요", 28, Ui.WHITE, 700, 44).apply { gravity = Gravity.CENTER; setPadding(dp(28), 0, dp(28), 0); isClickable = true }
+        val no = label("없어요", 28, Ui.WHITE, 700, 44).apply { gravity = Gravity.CENTER; setPadding(dp(28), 0, dp(28), 0); isClickable = true }
+        rearBox.addView(yes, lp(WRAP, dp(72)).apply { leftMargin = dp(16) })
+        rearBox.addView(no, lp(WRAP, dp(72)).apply { leftMargin = dp(16) })
+        fun paintRear() {
+            listOf(yes to true, no to false).forEach { (v, b) ->
+                val on = rearAns == b
+                v.background = rounded(if (on) Ui.PRIMARY else Ui.TRACK, 24)
+                v.setTextColor(if (on) Ui.ON_PRIMARY else Ui.WHITE)
+            }
+            seatValue?.text = if (rearAns ?: (rearRead == true)) "등받이는 그대로" else if (Learn.pose().isNotEmpty()) "지난번 자세로" else "편히 눕혀요"
+        }
+        right.addView(rearBox, lp(MATCH, WRAP).apply { topMargin = dp(24) })
+
+        // 쉼터 확인: 눌러야 시작 버튼이 켜집니다.
+        var shelterOk = false
+        val shelterRow = row()
+        shelterRow.background = rounded(Ui.PANEL, 24)
+        shelterRow.setPadding(dp(24), dp(16), dp(24), dp(16))
+        shelterRow.addView(IconView(this, "check", Ui.W84), lp(dp(40), dp(40)))
+        shelterRow.addView(label("졸음쉼터나 휴게소에 섰어요", 30, Ui.WHITE, 700, 48), lp(0, WRAP, 1f).apply { leftMargin = dp(16) })
+        lateinit var refreshPrep: () -> Unit
+        val shelter = Toggle(this, false) { on -> shelterOk = on; log("쪽잠 준비: 쉼터 확인 $on"); refreshPrep() }
+        shelterRow.addView(shelter, lp(WRAP, WRAP))
+        shelterRow.setOnClickListener { shelter.performClick() }
+        right.addView(shelterRow, lp(MATCH, WRAP).apply { topMargin = dp(24) })
+
+        // 큰 안내(시작 버튼 위)
+        val (warn, _) = alertBand("shield", "졸음쉼터나 휴게소에 섰을 때만 쓰세요. 도로 위, 갓길, 지하 주차장 같은 막힌 곳에서는 쓰지 마세요.")
+        right.addView(warn, lp(MATCH, WRAP).apply { topMargin = dp(16) })
+
         start.onClick {
             prefs.edit().putInt("minutes", pick).apply()
-            if (!Nap.start(pick, prefs.getInt("q3", 1).let { if (it < 0) 1 else it })) { bandText.text = "기어를 P에 두면 시작할 수 있어요."; band.visibility = View.VISIBLE }
+            val rear = rearAns ?: (rearRead == true)   // 운전자의 답이 먼저, 답이 없으면 읽은 값
+            if (!Nap.start(pick, prefs.getInt("q3", 1).let { if (it < 0) 1 else it }, rear)) { bandText.text = "기어를 P에 두면 시작할 수 있어요."; band.visibility = View.VISIBLE }
         }
-        addBtn(right, start, 24)
-        right.addView(note("shield", "지하 주차장 같은 막힌 곳에서는 쓰지 마세요.").first, lp(MATCH, WRAP).apply { topMargin = dp(32) })
+        addBtn(right, start, 16)
+        if (Learn.has()) {
+            val r = row()
+            val (n, _) = note("restore", "지난번 자세와 온도로 맞출게요")
+            r.addView(n, lp(0, WRAP, 1f))
+            r.addView(label("지우기", 24, Ui.W64, 600, 40).apply { setPadding(dp(16), 0, dp(16), 0); setOnClickListener { Learn.clear(); r.visibility = View.GONE; paintRear() } })
+            right.addView(r, lp(MATCH, WRAP).apply { topMargin = dp(16) })
+        }
         if (Remind.spoke && Remind.lastLine.isNotEmpty())
-            right.addView(note("speech", "달리는 중에 “${Remind.lastLine}”라고 권했어요.").first, lp(MATCH, WRAP).apply { topMargin = dp(16) })
+            right.addView(note("speech", "달리는 중에 “${Remind.lastLine}”라고 권했어요.").first, lp(MATCH, WRAP).apply { topMargin = dp(12) })
 
         var doorOpen = false
+        var winOpen = false
+        var winSaid = false
         var lastRead = 0L
         fun update() {
             wake.text = wakeLine(pick * 60)
             val now = System.currentTimeMillis()
             if (now - lastRead > 2000) {
                 lastRead = now
-                Car.readSafety { open, _ -> if (doorOpen != (open == true)) { doorOpen = open == true; update() } }
+                Car.readSafety { open, _ -> if (doorOpen != (open == true)) { doorOpen = open == true; refreshPrep() } }
+                Car.windowsOpen { o, st ->
+                    if (winOpen != (o == true)) {
+                        winOpen = o == true
+                        log("쪽잠 준비: 창 $st → 열림 $o")
+                        if (winOpen && !winSaid) { winSaid = true; Voice.say("창문이 열려 있어요.") }
+                        refreshPrep()
+                    }
+                }
+                if (!rearReadDone) Car.rearOccupied { r, st ->
+                    if (rearReadDone) return@rearOccupied
+                    rearReadDone = true
+                    rearRead = r
+                    log("쪽잠 준비: 뒷자리 $st → ${r ?: "모름"}${if (r != false) ", 묻기" else ""}")
+                    rearBox.visibility = if (r != false) View.VISIBLE else View.GONE
+                    if (r == true) rearQ.text = "뒷자리에 사람이나 짐이 있다고 읽혀요. 맞나요?"
+                    paintRear(); refreshPrep()
+                }
             }
             when {
                 doorOpen -> { bandText.text = "문이 열려 있어요. 닫으면 시작할 수 있어요."; band.visibility = View.VISIBLE }
                 !Car.isPark -> { bandText.text = "기어를 P에 두면 시작할 수 있어요."; band.visibility = View.VISIBLE }
+                winOpen -> { bandText.text = "창문이 열려 있어요."; band.visibility = View.VISIBLE }
                 else -> band.visibility = View.GONE
             }
-            start.isEnabled = Car.isPark && !doorOpen
+            val rearOk = rearReadDone && (rearRead == false || rearAns != null)
+            start.isEnabled = Car.isPark && !doorOpen && shelterOk && rearOk
         }
+        refreshPrep = { update() }
+        yes.setOnClickListener { rearAns = true; log("쪽잠 준비: 뒷자리 답 '있어요'(등받이 눕히기와 뒤로 밀기 안 함)"); paintRear(); update() }
+        no.setOnClickListener { rearAns = false; log("쪽잠 준비: 뒷자리 답 '없어요'"); paintRear(); update() }
+        paintRear()
         update()
         refresh = { update() }
-        return frame(twoCol(left, right), back = true)
+        val scroll = android.widget.ScrollView(this).apply { isVerticalScrollBarEnabled = false; addView(right) }
+        return frame(twoCol(left, scroll), back = true)
     }
+
+    private fun fmtT(t: Float) = if (t % 1f == 0f) t.toInt().toString() else t.toString()
 
     // ───── 재우는 중 ─────
 
@@ -652,11 +761,13 @@ class MainActivity : Activity() {
         right.addView(label("재우는 중", 26, Ui.W64, 400, 40))
         val doing = bigText("")
         right.addView(doing, lp(MATCH, WRAP).apply { topMargin = dp(8) })
-        val dots = StepDots(this, listOf("문", "빛", "소리", "공기"))
+        val dots = StepDots(this, listOf("문", "빛", "소리", "공기", "시트"))
         right.addView(dots, lp(WRAP, WRAP).apply { topMargin = dp(56) })
         val (airNote, _) = note("air", "공조가 꺼져 있어 공기는 그대로 둬요.")
         airNote.visibility = View.GONE
         right.addView(airNote, lp(MATCH, WRAP).apply { topMargin = dp(32) })
+        // 0.4: 재우는 중에도 화면에서 끝낼 수 있게('일어났어요'와 같은 되돌리기)
+        addBtn(right, btn(Btn.Kind.TONAL, "그만 쉬기", "sun") { Nap.restore("그만 쉬기를 누름") }, 32, dp(400))
 
         var hvac: Boolean? = null
         Car.hvacPower.get { v -> hvac = v; airNote.visibility = if (v == false) View.VISIBLE else View.GONE }
@@ -670,14 +781,15 @@ class MainActivity : Activity() {
             wake.text = wakeLine(rem)
             val (s, n) = when {
                 e < 2 -> "쉬기 전 상태를 적어 뒀어요" to 0
-                e < 3 -> "문을 잠갔어요" to 1
-                e < 5 -> "빛을 끄고 있어요" to 2
-                e < 20 -> "잠들 때의 소리를 틀었어요" to 4
-                e < 40 && hvac != false -> "공기를 바꿨어요" to 4
-                else -> "빛을 끄고 있어요" to 4
+                e < 3 -> "문과 창을 잠갔어요" to 1
+                e < 5 -> "빛을 노을빛으로 바꿔 끄고 있어요" to 2
+                e < 8 -> "잠들 때의 소리를 틀었어요" to 4
+                Nap.motorBusy -> josa(Nap.motorNow, "을", "를") + " 천천히 움직이고 있어요" to 4
+                e < 40 && hvac != false -> "공기를 바꿨어요" to 5
+                else -> "빛을 끄고 있어요" to 5
             }
             if (doing.text.toString() != s) { doing.text = s; if (!first) Ui.enter(doing) }
-            dots.set(BooleanArray(4) { i -> i < n && !(i == 3 && hvac == false) }, animate = !first)
+            dots.set(BooleanArray(5) { i -> i < n && !(i == 3 && hvac == false) }, animate = !first)
             first = false
             val now = System.currentTimeMillis()
             if (now - lastRead > 2000) { lastRead = now; Car.ambient.get { v -> if (v != null) amb.text = "$v%" } }
@@ -759,6 +871,9 @@ class MainActivity : Activity() {
         val doing = label("", 30, Ui.W84, 500, 48)
         right.addView(doing, lp(MATCH, dp(96)).apply { topMargin = dp(24) })
         addBtn(right, btn(Btn.Kind.PRIMARY, "일어났어요", "check") { Nap.restore("일어났어요를 누름") }, 32)
+        addBtn(right, btn(Btn.Kind.TONAL, "출발 준비", "seat") { Nap.restore("출발 준비를 누름") }, 16)
+        val motorLine = label("", 26, Ui.W84, 500, 40)
+        right.addView(motorLine, lp(MATCH, WRAP).apply { topMargin = dp(16) })
         val (noteRow, noteText) = note("speech", "")
         right.addView(noteRow, lp(MATCH, WRAP).apply { topMargin = dp(32) })
 
@@ -794,8 +909,8 @@ class MainActivity : Activity() {
                 litIcons = n
                 doing.text = when (st) {
                     1 -> "빛을 천천히 밝히고 있어요"
-                    2 -> if (hvac == false) "시트 열선을 껐어요. 공조가 꺼져 있어 바람과 온도는 그대로 둬요" else "시트 열선을 끄고, 온도를 낮추고 바람 3단계로 바꿨어요"
-                    3 -> "깨우는 소리를 틀었어요"
+                    2 -> if (hvac == false) "시트 열선을 껐어요. 공조가 꺼져 있어 바람과 온도는 그대로 둬요" else "시트 열선을 끄고, 온도를 낮추고 바람 3단계로 얼굴 쪽에 보내요"
+                    3 -> "시트 통풍을 켜고 깨우는 소리를 틀었어요"
                     else -> "“${Nap.minutes}분 쉬었어요. 일어날 시간이에요.”"
                 }
                 if (animate) Ui.enter(doing)
@@ -807,9 +922,9 @@ class MainActivity : Activity() {
             slept.visibility = sun.visibility
             clk.set(String.format(java.util.Locale.US, "%d:%02d", rem / 60, rem % 60), "")
             noteText.text = if (over < 60) "대답이 없으면 1분마다 다시 말하고, 3분째에는 실내등을 켜고 마쳐요." else "1분마다 다시 말해요. 세 번째에는 실내등을 켜고 마쳐요."
+            motorLine.text = if (Nap.motorBusy) josa(Nap.motorNow, "을", "를") + " 운전하던 자리로 천천히 세우고 있어요" else ""
             val now = System.currentTimeMillis()
             if (now - lastRead > 2000) { lastRead = now; Car.ambient.get { v -> if (v != null) amb.text = "$v%" } }
-            if (total <= 0) return
         }
         update()
         refresh = { update() }
@@ -818,18 +933,24 @@ class MainActivity : Activity() {
 
     // ───── 되돌린 화면(안전 되돌림 포함) ─────
 
-    private fun cellName(dev: String) = when (dev) {
-        "무드등 밝기", "무드등 색", "무드등 켜기" -> "무드등"
-        "실내등", "독서등" -> "실내등"
-        "공조 순환" -> "공기"
-        "공조 풍량" -> "바람"
-        "공조 온도" -> "온도"
-        "시트 열선" -> "시트"
+    private fun cellName(dev: String) = when {
+        dev.startsWith("무드등") -> "무드등"
+        dev == "실내등" || dev == "독서등" -> "실내등"
+        dev == "공조 순환" || dev == "공기청정" -> "공기"
+        dev == "공조 풍량" || dev == "바람 방향" -> "바람"
+        dev == "공조 온도" -> "온도"
+        dev == "시트 열선" || dev == "시트 통풍" -> "시트"
+        dev.startsWith("창") || dev == "스마트 글라스" -> "창문"
+        dev.startsWith("앞유리") -> "앞유리"
+        dev == "핸들 열선" -> "핸들"
+        dev == "사이드미러 열선" -> "미러"
+        Car.axes.any { it.name == dev } -> "시트 자세"
         else -> dev
     }
 
     private fun cellIcon(name: String) = when (name) {
-        "무드등" -> "bulb"; "실내등" -> "cabin"; "공기" -> "air"; "바람" -> "fan"; "온도" -> "temp"; "시트" -> "seat"; "문 잠금" -> "lock"; "소리" -> "note"; else -> "restore"
+        "무드등" -> "bulb"; "실내등" -> "cabin"; "공기" -> "air"; "바람" -> "fan"; "온도" -> "temp"; "시트", "시트 자세" -> "seat"; "문 잠금" -> "lock"; "소리" -> "note"
+        "창문" -> "door"; "앞유리" -> "air"; "핸들", "미러" -> "temp"; else -> "restore"
     }
 
     private fun restoredSig() = "${Nap.state}|${Nap.restored}|${Nap.failed}|${Nap.retried}|${Nap.kept}"
@@ -854,9 +975,9 @@ class MainActivity : Activity() {
             reason.contains("문이 열림") -> bands.add("door" to "문이 열려서 쪽잠을 마쳤어요.")
             reason.contains("기어") -> bands.add("gear" to "기어가 P를 벗어나 쪽잠을 마쳤어요.")
             reason.contains("운전석") -> bands.add("seat" to "운전석이 비어 쪽잠을 마쳤어요.")
-            reason.contains("3분") && Nap.kept.isEmpty() -> bands.add("cabin" to "대답이 없어 실내등을 켜고 쪽잠을 마쳤어요.")
+            reason.contains("3분") -> bands.add("cabin" to "대답이 없어 실내등을 켜고 쪽잠을 마쳤어요.")
         }
-        if (Nap.kept.isNotEmpty()) bands.add("lock" to "깨운 뒤 답이 없어 문은 잠근 채로 두었어요.")
+        if (Nap.kept.contains(Car.doorLock.name)) bands.add("lock" to "깨운 뒤 답이 없어 문은 잠근 채로 두었어요.")
         bands.forEach { (ic, s) -> right.addView(alertBand(ic, s).first, lp(MATCH, WRAP).apply { bottomMargin = dp(16) }) }
         val failedNames = Nap.failed.map { cellName(it) }.distinct()
         val title = when {
@@ -871,7 +992,7 @@ class MainActivity : Activity() {
         val cells = LinkedHashMap<String, Pair<String, Boolean>>()
         Nap.restored.forEach { cells[cellName(it)] = "돌려놨어요" to false }
         Nap.retried.forEach { cells[cellName(it)] = "P에서 돌려놨어요" to false }
-        Nap.kept.forEach { cells[cellName(it)] = "잠근 채로 뒀어요" to false }
+        Nap.kept.forEach { cells[cellName(it)] = (if (it == Car.cabin.name) "켠 채로 뒀어요" else "잠근 채로 뒀어요") to false }
         Nap.failed.forEach { cells[cellName(it)] = "돌려놓지 못했어요" to true }
         cells["소리"] = "껐어요" to false
         val grid = column()
@@ -892,13 +1013,15 @@ class MainActivity : Activity() {
         val pad = (4 - cells.size % 4) % 4
         repeat(pad) { r?.addView(View(this), lp(0, 1, 1f).apply { leftMargin = dp(16) }) }
         right.addView(grid, lp(MATCH, WRAP).apply { topMargin = dp(16) })
-        if (Nap.kept.isNotEmpty() && done) addBtn(right, btn(Btn.Kind.TONAL, "문 잠금 풀기", "lock") { Nap.unlockKept() }, 32)
+        val lockKept = Nap.kept.contains(Car.doorLock.name)
+        if (lockKept && done) addBtn(right, btn(Btn.Kind.TONAL, "문 잠금 풀기", "lock") { Nap.unlockKept() }, 32)
         if (done) addBtn(right, btn(Btn.Kind.PRIMARY, if (failedNames.isNotEmpty()) "확인했어요" else "처음 화면으로", if (failedNames.isNotEmpty()) "check" else null) {
             Nap.finish(); go("home")
-        }, if (Nap.kept.isNotEmpty()) 16 else 32)
+        }, if (lockKept) 16 else 32)
 
         refresh = { if (restoredSig() != sig && screen == "restored") show("restored", animate = false) }
-        return frame(twoCol(left, right))
+        val scroll = android.widget.ScrollView(this).apply { isVerticalScrollBarEnabled = false; addView(right) }
+        return frame(twoCol(left, scroll))
     }
 
     // ───── 시연 도구 판 ─────
@@ -933,6 +1056,7 @@ class MainActivity : Activity() {
         val hintSub = line("권하는 말 들어 보기", "두 시간 달렸을 때 하는 말을 지금 들려줘요", Btn(this, Btn.Kind.SMALL, "들어 보기").onClick { tryHint() })
         val weekSub = line("쉰 기록 지우기", weekLine(), Btn(this, Btn.Kind.SMALL, "지우기").onClick { Records.clear(); toolsRefresh?.invoke() })
         line("물음 다시 답하기", "처음 물음 셋을 다시 보여 줘요", Btn(this, Btn.Kind.SMALL, "다시 답하기").onClick { closeTools(); if (Nap.state == State.IDLE) go("ask") })
+        val learnSub = line("쓸수록 맞춘 값 지우기", Learn.line(), Btn(this, Btn.Kind.SMALL, "지우기").onClick { Learn.clear(); toolsRefresh?.invoke() })
         val nums = label("", 26, Ui.W64, 400, 40).apply { fontFeatureSettings = "tnum" }
         val nums2 = label("", 26, Ui.W64, 400, 40).apply { fontFeatureSettings = "tnum" }
         val wrap = column()
@@ -950,6 +1074,7 @@ class MainActivity : Activity() {
         toolsRefresh = {
             fastToggle.set(Nap.fast)
             weekSub.text = weekLine()
+            learnSub.text = Learn.line()
             if (hintText.isNotEmpty()) hintSub.text = hintText
             val d = Remind.drivenMin.toInt()
             val th = Remind.thresholdMin(if (Remind.on) Remind.q1 else prefs.getInt("q1", -1))

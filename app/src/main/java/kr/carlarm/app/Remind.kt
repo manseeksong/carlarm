@@ -55,9 +55,18 @@ object Remind {
     fun baseMin(q: Int = q1) = when (q) { 0 -> 60; 1 -> 90; else -> 120 }
     fun riskyHour(h: Int) = h >= 22 || h < 5 || h == 13 || h == 14
     private fun hour() = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-    /** 지금 시각에 맞춘 달린 시간 기준(분) */
-    fun thresholdMin(q: Int = q1): Int = if (riskyHour(hour())) minOf(baseMin(q), 90) else baseMin(q)
-    private fun phrase(min: Int) = when (min) { 60 -> "한 시간"; 90 -> "한 시간 반"; else -> "두 시간" }
+    /**
+     * 지금 시각에 맞춘 달린 시간 기준(분). 0.4: 쉬기로 한 때의 달린 시간 기록(Learn)이 있으면 그 평균을 쓰고 120분보다 늦추지 않습니다.
+     * 밤 10시~새벽 5시와 낮 1시~3시에는 90분을 넘기지 않습니다(값은 가정).
+     */
+    fun thresholdMin(q: Int = q1): Int {
+        val base = minOf(Learn.avgDriven() ?: baseMin(q), 120)
+        return if (riskyHour(hour())) minOf(base, 90) else base
+    }
+    fun phrase(min: Int) = when (min) {
+        60 -> "한 시간"; 90 -> "한 시간 반"; 120 -> "두 시간"
+        else -> if (min >= 60) "${min / 60}시간" + (if (min % 60 > 0) " ${min % 60}분" else "") else "${min}분"
+    }
 
     fun start(q1: Int, q2: Int) {
         if (on || !Car.isPark) return
@@ -121,7 +130,11 @@ object Remind {
             when {
                 !driveSaid && drivenMin >= th -> {
                     driveSaid = true; lastSignal = "drive"
-                    speak("${phrase(th)} 달렸으니 다음 쉼터에서 쉬어 가요.", "달린 시간 ${drivenMin.toInt()}분, 기준 ${th}분")
+                    // 0.4: 길 안내 중이면 앞쪽 쉼터까지의 거리를 넣습니다(NaviHelper.getTBTInfo). 답이 없으면 거리 없는 말 그대로
+                    val why = "달린 시간 ${drivenMin.toInt()}분, 기준 ${th}분"
+                    Road.restAhead { ahead ->
+                        speak(if (ahead != null) "${phrase(th)} 달렸으니 $ahead 에서 쉬어 가요." else "${phrase(th)} 달렸으니 다음 쉼터에서 쉬어 가요.", why + ", 앞쪽 쉼터 ${ahead ?: "모름(${Road.status})"}")
+                    }
                 }
                 !recircSaid && recircMin >= RECIRC_MIN -> {
                     recircSaid = true; lastSignal = "recirc"
@@ -189,5 +202,60 @@ object Remind {
         log("쉼 알림 되살림(센 시간 ${drivenMin.toInt()}분, 내기 순환 ${recircMin.toInt()}분, 이번 주행 말 ${spokenCount}번)")
         loop(token)
         onChange?.invoke()
+    }
+}
+
+/**
+ * 길과 쉼터(0.4). Pleos NaviHelper SDK 3.0.5. 길 안내 중이면 TBT 정보(getTBTInfo → onTBTInfo)에서
+ * 졸음쉼터(TurnType.TURN_RESTAREA)나 휴게소 들어가기(TURN_ENTER_SERVICEAREA)를 찾아 거리(TBTInfo.distance, 미터)를 말에 넣습니다.
+ * NaviHelper는 장소를 찾아 주지 않고 TBT에는 좌표가 없어, 쉼터를 경유지로 넣기와 주유, 충전 휴게소 고르기는 하지 않습니다
+ * (공식 출처가 있는 쉼터 좌표 목록이 없음).
+ */
+object Road {
+    private var helper: ai.pleos.playground.navi.helper.NaviHelper? = null
+    @Volatile var connected = false; private set
+    var status = "연결 전"; private set
+    private val waiting = ArrayList<(String?) -> Unit>()
+
+    fun start(ctx: android.content.Context) {
+        if (helper != null) return
+        try {
+            val h = ai.pleos.playground.navi.helper.NaviHelper(ctx.applicationContext)
+            helper = h
+            h.addListener(object : ai.pleos.playground.navi.helper.listener.NaviHelperEventListener {
+                override fun onTBTInfo(tbtInfoList: List<ai.pleos.playground.navi.data.TBTInfo>) { main.post { got(tbtInfoList) } }
+                override fun onError(errorCode: ai.pleos.playground.navi.constants.NaviErrorCode) { main.post { status = "오류 ${errorCode.name}"; log("길 안내: 오류 ${errorCode.name}") } }
+            })
+            h.initialize(onConnected = { main.post { connected = true; status = "연결됨"; log("길 안내: NaviHelper 연결됨") } },
+                onFailed = { t -> main.post { connected = false; status = "연결 실패 $t"; log("길 안내: NaviHelper 연결 실패 $t") } })
+        } catch (t: Throwable) {
+            status = "준비 예외 $t"
+            log("길 안내: NaviHelper 준비 예외 $t")
+        }
+    }
+
+    private fun got(list: List<ai.pleos.playground.navi.data.TBTInfo>) {
+        log("길 안내: TBT ${list.size}개 " + list.take(6).joinToString { "${it.type.name} ${it.distance}m ${it.description}" })
+        val rest = list.filter { it.type == ai.pleos.playground.navi.constants.TurnType.TURN_RESTAREA || it.type == ai.pleos.playground.navi.constants.TurnType.TURN_ENTER_SERVICEAREA }
+            .minByOrNull { it.distance }
+        val line = rest?.let {
+            val km = it.distance / 1000.0
+            val d = if (km >= 1) "${km.toInt()}km" else "${it.distance.toInt()}m"
+            "$d 앞 ${if (it.type == ai.pleos.playground.navi.constants.TurnType.TURN_RESTAREA) "졸음쉼터" else "휴게소"}"
+        }
+        status = if (rest == null) "TBT에 쉼터 없음" else "TBT에서 찾음"
+        val w = ArrayList(waiting); waiting.clear()
+        w.forEach { it(line) }
+    }
+
+    /** "12km 앞 졸음쉼터"를 찾습니다. 연결되지 않았거나 1.5초 안에 답이 없으면 null */
+    fun restAhead(cb: (String?) -> Unit) {
+        val h = helper
+        if (h == null || !connected) { log("길 안내: 연결되지 않아 거리 없이 말함($status)"); return cb(null) }
+        var done = false
+        val f: (String?) -> Unit = { v -> if (!done) { done = true; cb(v) } }
+        waiting.add(f)
+        try { h.getTBTInfo() } catch (t: Throwable) { status = "getTBTInfo 예외 $t"; log("길 안내: getTBTInfo 예외 $t") }
+        main.postDelayed({ if (!done) { waiting.remove(f); status = "TBT 답 없음(1.5초)"; log("길 안내: 1.5초 안에 TBT 답이 없어 거리 없이 말함"); f(null) } }, 1500)
     }
 }

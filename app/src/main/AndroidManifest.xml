@@ -6,15 +6,23 @@
         android:required="true" />
 
     <!-- Pleos Vehicle SDK 2.3.2 (각 api/*.kt의 Permission 설명과 implement/*Impl.kt의 검사 값) -->
-    <uses-permission android:name="pleos.car.permission.CAR_SEATS" />          <!-- 운전석 탑승, 시트 열선 읽기 -->
-    <uses-permission android:name="pleos.car.permission.CONTROL_CAR_SEATS" />  <!-- 시트 열선 끄기 -->
+    <uses-permission android:name="pleos.car.permission.CAR_SEATS" />          <!-- 운전석과 뒷자리 탑승, 시트 열선과 통풍, 시트 위치 읽기 -->
+    <uses-permission android:name="pleos.car.permission.CONTROL_CAR_SEATS" />  <!-- 시트 열선과 통풍, 시트 움직이기(moveSeat…) -->
     <uses-permission android:name="pleos.car.permission.CAR_DOORS" />          <!-- 문 열림, 잠금 읽기 -->
     <uses-permission android:name="pleos.car.permission.CONTROL_CAR_DOORS" />  <!-- 문 잠금(쪽잠 동안 잠그고 되돌림) -->
     <uses-permission android:name="pleos.car.permission.CAR_LIGHTS" />         <!-- 무드등, 실내등, 독서등 읽기 -->
     <uses-permission android:name="pleos.car.permission.CONTROL_CAR_LIGHTS" /> <!-- 무드등, 실내등, 독서등 바꾸기 -->
     <uses-permission android:name="pleos.car.permission.CAR_CLIMATE" />        <!-- 공조 읽기 -->
-    <uses-permission android:name="pleos.car.permission.CONTROL_CAR_CLIMATE" /><!-- 공조 바꾸기 -->
+    <uses-permission android:name="pleos.car.permission.CONTROL_CAR_CLIMATE" /><!-- 공조 바꾸기(0.4: 김 서림, 공기청정, 바람 방향, 핸들 열선) -->
     <uses-permission android:name="pleos.car.permission.CAR_DRIVE" />          <!-- 이번 주행의 달린 시간 -->
+    <!-- 0.4: 창 위치와 잠금, 블라인드, 스마트 글라스(Window), 사이드미러 열선(SideMirror) -->
+    <uses-permission android:name="pleos.car.permission.CAR_WINDOWS" />
+    <uses-permission android:name="pleos.car.permission.CONTROL_CAR_WINDOWS" />
+    <uses-permission android:name="pleos.car.permission.CAR_MIRRORS" />
+    <uses-permission android:name="pleos.car.permission.CONTROL_CAR_MIRRORS" />
+
+    <!-- 0.4: Pleos NaviHelper SDK 3.0.5 길 안내 정보(getTBTInfo) -->
+    <uses-permission android:name="pleos.car.permission.NAVI_ROUTE" />
 
     <!-- Pleos TextToSpeech SDK 3.3.1 -->
     <uses-permission android:name="pleos.car.permission.TTS_SERVICE" />

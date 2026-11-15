@@ -26,8 +26,8 @@ android {
         applicationId = "kr.carlarm.app"
         minSdk = 28 // Pleos 안내: minSdk 28 이상
         targetSdk = 34
-        versionCode = 4
-        versionName = "0.3.1"
+        versionCode = 5
+        versionName = "0.4"
     }
 
     signingConfigs {
@@ -76,4 +76,6 @@ dependencies {
     implementation("ai.pleos.playground:Vehicle:2.3.2")
     implementation("ai.pleos.playground:vehicle-data:1.1.11")
     implementation("ai.pleos.playground:TextToSpeech:3.3.1")
+    // 0.4: 길 안내 정보(앞쪽 쉼터까지의 거리)
+    implementation("ai.pleos.playground:NaviHelper:3.0.5")
 }

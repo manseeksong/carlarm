@@ -1,0 +1,31 @@
+11-15 20:31:13.205 15154 15154 I Carlarm : 기어 P
+11-15 20:31:13.219 15154 15154 I Carlarm : 말: 준비됨
+11-15 20:31:13.219 15154 15154 I Carlarm : 길 안내: NaviHelper 연결됨
+11-15 20:31:13.219 15154 15154 I Carlarm : 기어 P
+11-15 20:31:13.247 15154 15175 I Carlarm : 풍량 영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@10383a26 범위 1~8
+11-15 20:31:13.247 15154 15175 I Carlarm : 온도 영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@2b7918 범위 15.0~30.0
+11-15 20:31:13.248 15154 15302 I Carlarm : 무드등 영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@279ae19e 범위 0~100
+11-15 20:31:13.248 15154 15175 I Carlarm : 탑승 영역 5개 중 ai.pleos.playground.vehicle.api.model.area.SeatArea@2b7918
+11-15 20:31:13.249 15154 15175 I Carlarm : 시트 능력 등받이: 운전석 범위 0~100
+11-15 20:31:13.250 15154 15175 I Carlarm : 시트 능력 시트 높이: 운전석 범위 0~100
+11-15 20:31:13.250 15154 15175 I Carlarm : 시트 능력 쿠션 기울기: 운전석 범위 0~100
+11-15 20:31:13.251 15154 15175 I Carlarm : 시트 능력 쿠션 길이: 운전석 범위 -10~10
+11-15 20:31:13.251 15154 15175 I Carlarm : 시트 능력 허리 받침: 운전석 범위 -10~10
+11-15 20:31:13.251 15154 15175 I Carlarm : 시트 능력 허리 옆 받침: 운전석 범위 -10~10
+11-15 20:31:13.252 15154 15175 I Carlarm : 시트 능력 머리 받침 각도: 운전석 범위 -10~10
+11-15 20:31:13.252 15154 15302 I Carlarm : 시트 능력 시트 앞뒤: 운전석 범위 0~100
+11-15 20:31:13.256 15154 15175 I Carlarm : 시트 능력 머리 받침 앞뒤: 운전석 범위 -10~10
+11-15 20:31:13.256 15154 15175 I Carlarm : 시트 통풍 영역 [ROW_1_LEFT] 범위 0~3
+11-15 20:31:13.257 15154 15175 I Carlarm : 공기청정 영역 1개 중 [ROW_1_LEFT, ROW_1_RIGHT, ROW_2_LEFT, ROW_2_CENTER, ROW_2_RIGHT]
+11-15 20:31:13.257 15154 15175 I Carlarm : 바람 방향 영역 [ROW_1_LEFT, ROW_1_RIGHT] 고를 수 있는 값 []
+11-15 20:31:13.260 15154 15175 I Carlarm : 실내 온도 영역 3개 중 [ROW_1_LEFT]
+11-15 20:31:13.260 15154 15175 I Carlarm : 사이드미러 열선 영역 [DRIVER_LEFT, DRIVER_RIGHT] (받은 영역 3개)
+11-15 20:31:13.262 15154 15180 I Carlarm : 핸들 열선 범위 0~3
+11-15 20:31:13.266 15154 15180 I Carlarm : 창 잠금 영역 [ROW_1_LEFT, ROW_1_RIGHT, ROW_2_LEFT, ROW_2_RIGHT] (받은 영역 3개)
+11-15 20:31:13.267 15154 15319 I Carlarm : 창 위치 영역 4개, 앞 왼쪽 범위 0~10
+11-15 20:31:13.267 15154 15180 I Carlarm : 블라인드 영역 4개
+11-15 20:31:13.268 15154 15302 I Carlarm : 시트 능력 머리 받침 높이: 운전석 범위 -10~10
+11-15 20:31:13.269 15154 15302 I Carlarm : 스마트 글라스 능력 실패(지원 안 함으로 봄) ai.pleos.playground.vehicle.callback.exception.a: ERROR_NOT_SUPPORTED_PROPERTY
+11-15 20:31:13.396 15154 15154 I Carlarm : 내기 순환 알림 등록함(영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@279ae19e)
+11-15 20:31:13.396 15154 15154 I Carlarm : 문 잠금 능력 접근 READ_WRITE, 영역 2개: HOOD, ROW_1_LEFT+ROW_1_RIGHT+ROW_2_LEFT+ROW_2_RIGHT
+11-15 20:31:13.429 15154 15154 I Carlarm : 내기 순환 알림 true
