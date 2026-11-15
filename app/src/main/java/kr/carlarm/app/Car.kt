@@ -308,6 +308,28 @@ object Car {
 
     private fun sendMove(ax: Axis, m: MoveControl) = safe({}) { ax.move(DRIVER, m, { _, _ -> }, { e -> log("${ax.name} ${m.name} 실패 $e") }) }
 
+    /** 0.4.1: 지금 움직이는 시트 축(움직이라고 보낸 뒤 STOP 전까지)과 멈춤 번호 */
+    @Volatile var seatMoving: Axis? = null; private set
+    @Volatile private var seatMovingSince = 0L
+    @Volatile private var seatGen = 0
+    /** stopSeats가 STOP을 보낸 때. 멈춤 번호로 끝난 움직임은 보낸 시간을 여기까지로 셉니다 */
+    @Volatile private var seatStopAt = 0L
+    private fun endAt(g: Int, t0: Long): Long = if (g != seatGen && seatStopAt >= t0) seatStopAt else android.os.SystemClock.uptimeMillis()
+    private fun moving(ax: Axis) { seatMoving = ax; seatMovingSince = android.os.SystemClock.uptimeMillis() }
+    private fun still(ax: Axis) { if (seatMoving === ax) seatMoving = null }
+
+    /**
+     * 0.4.1: 쪽잠이 끝나는 모든 경우(Nap.restore 첫 줄)에 부릅니다. 지금 움직이는 축에 곧바로 STOP을 보내고(위치 읽기 답을 기다리지 않음),
+     * 멈춤 번호를 올려 moveTo, pushFor, unblind가 다음 확인(50ms) 안에 스스로 끝내게 합니다. 아직 움직이기 전인 차례도 움직이지 않습니다.
+     */
+    fun stopSeats(why: String) {
+        seatStopAt = android.os.SystemClock.uptimeMillis()
+        seatGen++
+        val ax = seatMoving
+        if (ax != null) { sendMove(ax, MoveControl.STOP); log("${ax.name}: $why, 곧바로 STOP 보냄(움직인 지 ${android.os.SystemClock.uptimeMillis() - seatMovingSince}ms, 위치 읽기를 기다리지 않음)") }
+        else log("시트 멈춤: $why, 지금 움직이는 축 없음")
+    }
+
     /**
      * 목표 위치까지 천천히 움직이고 멈춥니다. 100ms마다 위치를 읽어 목표에 닿으면 STOP.
      * 시간 제한(기본 15초)이 지나거나 1.5초 동안 위치가 그대로면(끝에 닿음, 지원 안 함) STOP.
@@ -316,7 +338,9 @@ object Car {
     fun moveTo(ax: Axis, target0: Int, timeoutMs: Long = 15000, cb: (Int?) -> Unit) {
         val target = if (ax.known) target0.coerceIn(ax.min, ax.max) else target0
         if (!isPark) { log("${ax.name}: 기어 ${gearName()}라 움직이지 않음"); return cb(null) }
+        val g = seatGen
         readAxis(ax) { start ->
+            if (g != seatGen) { log("${ax.name}: 쪽잠이 끝나 움직이지 않음"); return@readAxis cb(null) }
             if (start == null) { log("${ax.name}: 위치를 읽지 못해 움직이지 않음"); return@readAxis cb(null) }
             if (abs(start - target) <= ax.tol) { log("${ax.name}: 지금 $start, 목표 $target 안이라 움직이지 않음"); return@readAxis cb(start) }
             val dir = if (target > start) MoveControl.FORWARD else MoveControl.BACKWARD
@@ -328,11 +352,21 @@ object Car {
                 if (stopped) return
                 stopped = true
                 sendMove(ax, MoveControl.STOP)
-                val sent = android.os.SystemClock.uptimeMillis() - t0
+                still(ax)
+                val sent = endAt(g, t0) - t0
                 if (last == start) { ax.blindMs += if (dir == MoveControl.FORWARD) sent else -sent; log("${ax.name}: 위치 값이 바뀌지 않음(움직임을 확인하지 못함), 보낸 시간 ${sent}ms, 되돌릴 때 반대로 움직일 시간 ${ax.blindMs}ms") }
                 main.postDelayed({ readAxis(ax) { end -> log("${ax.name}: ${dir.name} $start → 목표 $target, $why, STOP 보낸 뒤 다시 읽음 $end"); cb(end) } }, 300)
             }
+            moving(ax)
             sendMove(ax, dir)
+            // 0.4.1: 위치 읽기와 따로 50ms마다 멈춤 번호와 기어를 봅니다(읽기 답을 기다리지 않음)
+            fun guard() {
+                if (stopped) return
+                if (g != seatGen) return stop("쪽잠이 끝나 멈춤")
+                if (!isPark) return stop("기어가 P를 벗어나 멈춤")
+                main.postDelayed({ guard() }, 50)
+            }
+            main.postDelayed({ guard() }, 50)
             fun poll() {
                 if (stopped) return
                 if (!isPark) return stop("기어가 P를 벗어나 멈춤")
@@ -364,18 +398,26 @@ object Car {
      */
     fun pushFor(ax: Axis, dir: MoveControl, ms: Long, cb: (Int?) -> Unit) {
         if (!isPark) { log("${ax.name}: 기어 ${gearName()}라 움직이지 않음"); return cb(null) }
+        val g = seatGen
         readAxis(ax) { start ->
+            if (g != seatGen) { log("${ax.name}: 쪽잠이 끝나 움직이지 않음"); return@readAxis cb(null) }
             if (!isPark) { log("${ax.name}: 기어 ${gearName()}라 움직이지 않음"); return@readAxis cb(null) }
+            moving(ax)
             sendMove(ax, dir)
+            log("${ax.name}: 위치를 몰라 ${dir.name} 보냄(정한 시간 ${ms}ms)")
             val t0 = android.os.SystemClock.uptimeMillis()
+            var ended = false
             fun end(why: String) {
+                if (ended) return
+                ended = true
                 sendMove(ax, MoveControl.STOP)
-                val sent = android.os.SystemClock.uptimeMillis() - t0
+                still(ax)
+                val sent = endAt(g, t0) - t0
                 ax.blindMs += if (dir == MoveControl.FORWARD) sent else -sent
                 main.postDelayed({ readAxis(ax) { e -> log("${ax.name}: 위치를 몰라 ${dir.name}로 ${sent}ms 보내고 STOP($why), 보내기 전 위치 $start, STOP 뒤 다시 읽음 $e, 되돌릴 때 반대로 보낼 시간 ${ax.blindMs}ms"); cb(e) } }, 300)
             }
             // 보내는 동안 P를 벗어나면 바로 멈춤
-            fun watchGear() { if (android.os.SystemClock.uptimeMillis() - t0 >= ms) return end("정한 시간 ${ms}ms"); if (!isPark) return end("기어가 P를 벗어나 멈춤"); main.postDelayed({ watchGear() }, 50) }
+            fun watchGear() { if (g != seatGen) return end("쪽잠이 끝나 멈춤"); if (android.os.SystemClock.uptimeMillis() - t0 >= ms) return end("정한 시간 ${ms}ms"); if (!isPark) return end("기어가 P를 벗어나 멈춤"); main.postDelayed({ watchGear() }, 50) }
             main.postDelayed({ watchGear() }, 50)
         }
     }
@@ -390,8 +432,29 @@ object Car {
         if (!isPark) { log("${ax.name}: 기어 ${gearName()}라 반대로 움직이지 않음"); return cb(false) }
         ax.blindMs = 0
         val m = if (ms > 0) MoveControl.BACKWARD else MoveControl.FORWARD
+        val g = seatGen
+        moving(ax)
         sendMove(ax, m)
-        main.postDelayed({ sendMove(ax, MoveControl.STOP); log("${ax.name}: 위치를 못 읽어 보낸 시간만큼 반대로(${m.name} ${abs(ms)}ms) 움직이고 STOP"); cb(false) }, abs(ms))
+        val t0 = android.os.SystemClock.uptimeMillis()
+        var ended = false
+        fun end(why: String?) {
+            if (ended) return
+            ended = true
+            sendMove(ax, MoveControl.STOP)
+            still(ax)
+            if (why == null) log("${ax.name}: 위치를 못 읽어 보낸 시간만큼 반대로(${m.name} ${abs(ms)}ms) 움직이고 STOP")
+            else {
+                // 0.4.1: 도중에 멈추면 남은 시간을 적어 둡니다(되돌릴 때 P면 마저 보냄)
+                val sent = endAt(g, t0) - t0
+                ax.blindMs = ms + if (m == MoveControl.FORWARD) sent else -sent
+                log("${ax.name}: 반대로(${m.name}) ${sent}ms 보낸 뒤 $why, STOP. 남은 시간 ${ax.blindMs}ms")
+            }
+            cb(false)
+        }
+        main.postDelayed({ end(null) }, abs(ms))
+        // 0.4.1: 보내는 동안 50ms마다 멈춤 번호와 기어를 봄
+        fun watch() { if (ended) return; if (g != seatGen) return end("쪽잠이 끝나 멈춤"); if (!isPark) return end("기어가 P를 벗어나 멈춤"); main.postDelayed({ watch() }, 50) }
+        main.postDelayed({ watch() }, 50)
     }
     val seats: List<Dev<Int>> = axes.map { seatDev(it) }
     fun seatOf(ax: Axis): Dev<Int> = seats[axes.indexOf(ax)]

@@ -26,8 +26,8 @@ android {
         applicationId = "kr.carlarm.app"
         minSdk = 28 // Pleos 안내: minSdk 28 이상
         targetSdk = 34
-        versionCode = 5
-        versionName = "0.4"
+        versionCode = 6
+        versionName = "0.4.1"
     }
 
     signingConfigs {

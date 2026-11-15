@@ -1,0 +1,65 @@
+--------- beginning of main
+11-15 21:22:24.806 I/Carlarm (14795): 기어 P
+11-15 21:22:24.839 I/Carlarm (14795): 무드등 영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@b09e197c 범위 0~100
+11-15 21:22:24.843 I/Carlarm (14795): 풍량 영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@7c1e0e9e 범위 1~8
+11-15 21:22:24.848 I/Carlarm (14795): 온도 영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@3801162 범위 15.0~30.0
+11-15 21:22:24.857 I/Carlarm (14795): 탑승 영역 5개 중 ai.pleos.playground.vehicle.api.model.area.SeatArea@3801162
+11-15 21:22:24.871 I/Carlarm (14795): 시트 능력 등받이: 운전석 범위 0~100
+11-15 21:22:24.873 I/Carlarm (14795): 시트 능력 시트 앞뒤: 운전석 범위 0~100
+11-15 21:22:24.874 I/Carlarm (14795): 시트 능력 시트 높이: 운전석 범위 0~100
+11-15 21:22:24.878 I/Carlarm (14795): 시트 능력 쿠션 기울기: 운전석 범위 0~100
+11-15 21:22:24.882 I/Carlarm (14795): 시트 능력 쿠션 길이: 운전석 범위 -10~10
+11-15 21:22:24.883 I/Carlarm (14795): 시트 능력 머리 받침 각도: 운전석 범위 -10~10
+11-15 21:22:24.884 I/Carlarm (14795): 시트 능력 머리 받침 앞뒤: 운전석 범위 -10~10
+11-15 21:22:24.885 I/Carlarm (14795): 시트 능력 허리 받침: 운전석 범위 -10~10
+11-15 21:22:24.885 I/Carlarm (14795): 시트 능력 머리 받침 높이: 운전석 범위 -10~10
+11-15 21:22:24.887 I/Carlarm (14795): 시트 통풍 영역 [ROW_1_LEFT] 범위 0~3
+11-15 21:22:24.891 I/Carlarm (14795): 말: 준비됨
+11-15 21:22:24.891 I/Carlarm (14795): 길 안내: NaviHelper 연결됨
+11-15 21:22:24.891 I/Carlarm (14795): 기어 P
+11-15 21:22:24.892 I/Carlarm (14795): 시트 능력 허리 옆 받침: 운전석 범위 -10~10
+11-15 21:22:24.895 I/Carlarm (14795): 바람 방향 영역 [ROW_1_LEFT, ROW_1_RIGHT] 고를 수 있는 값 []
+11-15 21:22:24.896 I/Carlarm (14795): 공기청정 영역 1개 중 [ROW_1_LEFT, ROW_1_RIGHT, ROW_2_LEFT, ROW_2_CENTER, ROW_2_RIGHT]
+11-15 21:22:24.898 I/Carlarm (14795): 실내 온도 영역 3개 중 [ROW_1_LEFT]
+11-15 21:22:24.900 I/Carlarm (14795): 사이드미러 열선 영역 [DRIVER_LEFT, DRIVER_RIGHT] (받은 영역 3개)
+11-15 21:22:24.902 I/Carlarm (14795): 핸들 열선 범위 0~3
+11-15 21:22:24.903 I/Carlarm (14795): 창 잠금 영역 [ROW_1_LEFT, ROW_1_RIGHT, ROW_2_LEFT, ROW_2_RIGHT] (받은 영역 3개)
+11-15 21:22:24.905 I/Carlarm (14795): 창 위치 영역 4개, 앞 왼쪽 범위 0~10
+11-15 21:22:24.909 I/Carlarm (14795): 블라인드 영역 4개
+11-15 21:22:24.914 I/Carlarm (14795): 스마트 글라스 능력 실패(지원 안 함으로 봄) ai.pleos.playground.vehicle.callback.exception.a: ERROR_NOT_SUPPORTED_PROPERTY
+11-15 21:22:24.926 I/Carlarm (14795): 내기 순환 알림 등록함(영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@b09e197c)
+11-15 21:22:24.928 I/Carlarm (14795): 문 잠금 능력 접근 READ_WRITE, 영역 2개: HOOD, ROW_1_LEFT+ROW_1_RIGHT+ROW_2_LEFT+ROW_2_RIGHT
+11-15 21:22:24.960 I/Carlarm (14795): 내기 순환 알림 true
+--- 2회째 release 확인 (21:26 빌드, 시연 도구 줄 높이 고친 판) ---
+--------- beginning of main
+11-15 21:26:30.993 I/Carlarm (30759): 기어 P
+11-15 21:26:31.019 I/Carlarm (30759): 말: 준비됨
+11-15 21:26:31.019 I/Carlarm (30759): 길 안내: NaviHelper 연결됨
+11-15 21:26:31.019 I/Carlarm (30759): 기어 P
+11-15 21:26:31.040 I/Carlarm (30759): 무드등 영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@3aa0bc42 범위 0~100
+11-15 21:26:31.048 I/Carlarm (30759): 풍량 영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@10383a26 범위 1~8
+11-15 21:26:31.051 I/Carlarm (30759): 온도 영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@2b7918 범위 15.0~30.0
+11-15 21:26:31.065 I/Carlarm (30759): 시트 능력 등받이: 운전석 범위 0~100
+11-15 21:26:31.071 I/Carlarm (30759): 시트 능력 시트 앞뒤: 운전석 범위 0~100
+11-15 21:26:31.071 I/Carlarm (30759): 시트 능력 시트 높이: 운전석 범위 0~100
+11-15 21:26:31.084 I/Carlarm (30759): 시트 능력 쿠션 길이: 운전석 범위 -10~10
+11-15 21:26:31.086 I/Carlarm (30759): 시트 능력 쿠션 기울기: 운전석 범위 0~100
+11-15 21:26:31.095 I/Carlarm (30759): 시트 능력 머리 받침 각도: 운전석 범위 -10~10
+11-15 21:26:31.097 I/Carlarm (30759): 시트 능력 머리 받침 높이: 운전석 범위 -10~10
+11-15 21:26:31.100 I/Carlarm (30759): 시트 능력 머리 받침 앞뒤: 운전석 범위 -10~10
+11-15 21:26:31.100 I/Carlarm (30759): 시트 통풍 영역 [ROW_1_LEFT] 범위 0~3
+11-15 21:26:31.100 I/Carlarm (30759): 공기청정 영역 1개 중 [ROW_1_LEFT, ROW_1_RIGHT, ROW_2_LEFT, ROW_2_CENTER, ROW_2_RIGHT]
+11-15 21:26:31.101 I/Carlarm (30759): 바람 방향 영역 [ROW_1_LEFT, ROW_1_RIGHT] 고를 수 있는 값 []
+11-15 21:26:31.103 I/Carlarm (30759): 시트 능력 허리 옆 받침: 운전석 범위 -10~10
+11-15 21:26:31.104 I/Carlarm (30759): 사이드미러 열선 영역 [DRIVER_LEFT, DRIVER_RIGHT] (받은 영역 3개)
+11-15 21:26:31.104 I/Carlarm (30759): 핸들 열선 범위 0~3
+11-15 21:26:31.104 I/Carlarm (30759): 실내 온도 영역 3개 중 [ROW_1_LEFT]
+11-15 21:26:31.107 I/Carlarm (30759): 탑승 영역 5개 중 ai.pleos.playground.vehicle.api.model.area.SeatArea@2b7918
+11-15 21:26:31.110 I/Carlarm (30759): 시트 능력 허리 받침: 운전석 범위 -10~10
+11-15 21:26:31.112 I/Carlarm (30759): 창 잠금 영역 [ROW_1_LEFT, ROW_1_RIGHT, ROW_2_LEFT, ROW_2_RIGHT] (받은 영역 3개)
+11-15 21:26:31.117 I/Carlarm (30759): 창 위치 영역 4개, 앞 왼쪽 범위 0~10
+11-15 21:26:31.120 I/Carlarm (30759): 블라인드 영역 4개
+11-15 21:26:31.121 I/Carlarm (30759): 스마트 글라스 능력 실패(지원 안 함으로 봄) ai.pleos.playground.vehicle.callback.exception.a: ERROR_NOT_SUPPORTED_PROPERTY
+11-15 21:26:31.166 I/Carlarm (30759): 내기 순환 알림 등록함(영역 ai.pleos.playground.vehicle.api.model.area.SeatArea@3aa0bc42)
+11-15 21:26:31.166 I/Carlarm (30759): 문 잠금 능력 접근 READ_WRITE, 영역 2개: HOOD, ROW_1_LEFT+ROW_1_RIGHT+ROW_2_LEFT+ROW_2_RIGHT
+11-15 21:26:31.179 I/Carlarm (30759): 내기 순환 처음 값 true

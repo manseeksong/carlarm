@@ -50,6 +50,7 @@ class MainActivity : Activity() {
         Voice.start(this)
         Road.start(this)
         Nap.fast = prefs.getBoolean("fast", false)
+        Nap.demoSeat = prefs.getBoolean("demoSeat", false)
         // Nap.onGear()는 Car가 기어 콜백에서 직접 부릅니다(여기서 부르면 두 번 불림).
         Car.onGear = {
             // 권한 뒤 P에 서면 시작 화면이 상태에 맞는 말("…넘게 달렸으니 쉬어 가요.")과 "지난번처럼 N분 쉬기"를 먼저 건넵니다(0.2는 쪽잠 준비를 바로 열었음).
@@ -163,6 +164,7 @@ class MainActivity : Activity() {
             "nap" -> { prefs.edit().putBoolean("fast", true).apply(); Nap.fast = true; log("장치 시험: 쪽잠 시작 ${Nap.start(v.substringBefore(",").toIntOrNull() ?: 10, 1, rear = v.substringAfter(",", "") == "rear")}") }
             "woke" -> Nap.restore("일어났어요를 누름(시험)")
             "fast" -> { Nap.fast = v == "on"; prefs.edit().putBoolean("fast", Nap.fast).apply(); fastDot.visibility = if (Nap.fast) View.VISIBLE else View.GONE; log("장치 시험: 빠르게 보기 ${Nap.fast}") }
+            "demoseat" -> { Nap.demoSeat = v == "on"; prefs.edit().putBoolean("demoSeat", Nap.demoSeat).apply(); log("장치 시험: 시간으로 시트 움직이기 ${Nap.demoSeat}") }
             "remind" -> { if (v == "off") Remind.stop() else Remind.start(prefs.getInt("q1", -1), prefs.getInt("q2", 0)); log("장치 시험: 쉼 알림 ${Remind.on}, 기준 ${Remind.thresholdMin()}분(맞춘 평균 ${Learn.avgDriven()})") }
             "threshold" -> log("장치 시험: 권하는 때 ${Remind.thresholdMin()}분(맞춘 평균 ${Learn.avgDriven()}, 첫째 답 ${prefs.getInt("q1", -1)}), 달린 시간 ${Remind.drivenMin.toInt()}분")
             "prep" -> if (Nap.state == State.IDLE) go("prep")
@@ -638,12 +640,12 @@ class MainActivity : Activity() {
         right.addView(pickRow, lp(MATCH, WRAP).apply { topMargin = dp(32) })
         right.addView(wake, lp(MATCH, WRAP).apply { topMargin = dp(16) })
 
-        // 뒷자리 확인: 탑승 값이 '있음'이거나 모르면 묻습니다. '있어요'면 등받이 눕히기와 뒤로 밀기를 하지 않습니다.
+        // 뒷자리 확인(0.4.1): 탑승 값과 상관없이 늘 묻습니다(짐과 카시트는 탑승 값으로 알 수 없음). '있어요'면 등받이 눕히기와 뒤로 밀기를 하지 않습니다.
         var rearRead: Boolean? = null
         var rearReadDone = false
         var rearAns: Boolean? = null
-        val rearBox = row().apply { visibility = View.GONE }
-        val rearQ = label("뒷자리에 사람이나 짐이 있나요?", 28, Ui.WHITE, 700, 44)
+        val rearBox = row()
+        val rearQ = label("뒷자리에 사람이나 짐, 카시트가 있나요?", 28, Ui.WHITE, 700, 44)
         rearBox.addView(rearQ, lp(0, WRAP, 1f))
         val yes = label("있어요", 28, Ui.WHITE, 700, 44).apply { gravity = Gravity.CENTER; setPadding(dp(28), 0, dp(28), 0); isClickable = true }
         val no = label("없어요", 28, Ui.WHITE, 700, 44).apply { gravity = Gravity.CENTER; setPadding(dp(28), 0, dp(28), 0); isClickable = true }
@@ -673,8 +675,10 @@ class MainActivity : Activity() {
         right.addView(shelterRow, lp(MATCH, WRAP).apply { topMargin = dp(24) })
 
         // 큰 안내(시작 버튼 위)
-        val (warn, _) = alertBand("shield", "졸음쉼터나 휴게소에 섰을 때만 쓰세요. 도로 위, 갓길, 지하 주차장 같은 막힌 곳에서는 쓰지 마세요.")
+        val (warn, _) = alertBand("shield", "졸음쉼터나 휴게소에 섰을 때만 쓰세요. 도로 위나 갓길에서는 쓰지 마시고, 지하 주차장 같은 막힌 곳도 피하세요.")
         right.addView(warn, lp(MATCH, WRAP).apply { topMargin = dp(16) })
+        // 0.4.1: 차 화면이 꺼지면 깨울 수 없음을 미리 알림
+        right.addView(note("bell", "차 화면이 꺼지면 깨울 수 없어요. 폰 알람도 함께 맞춰 두세요.").first, lp(MATCH, WRAP).apply { topMargin = dp(12) })
 
         start.onClick {
             prefs.edit().putInt("minutes", pick).apply()
@@ -714,9 +718,7 @@ class MainActivity : Activity() {
                     if (rearReadDone) return@rearOccupied
                     rearReadDone = true
                     rearRead = r
-                    log("쪽잠 준비: 뒷자리 $st → ${r ?: "모름"}${if (r != false) ", 묻기" else ""}")
-                    rearBox.visibility = if (r != false) View.VISIBLE else View.GONE
-                    if (r == true) rearQ.text = "뒷자리에 사람이나 짐이 있다고 읽혀요. 맞나요?"
+                    log("쪽잠 준비: 뒷자리 $st → ${r ?: "모름"}, 값과 상관없이 묻기(짐과 카시트는 탑승 값으로 모름)")
                     paintRear(); refreshPrep()
                 }
             }
@@ -726,7 +728,7 @@ class MainActivity : Activity() {
                 winOpen -> { bandText.text = "창문이 열려 있어요."; band.visibility = View.VISIBLE }
                 else -> band.visibility = View.GONE
             }
-            val rearOk = rearReadDone && (rearRead == false || rearAns != null)
+            val rearOk = rearAns != null   // 0.4.1: 늘 답을 받은 뒤에만 시작
             start.isEnabled = Car.isPark && !doorOpen && shelterOk && rearOk
         }
         refreshPrep = { update() }
@@ -766,6 +768,10 @@ class MainActivity : Activity() {
         val (airNote, _) = note("air", "공조가 꺼져 있어 공기는 그대로 둬요.")
         airNote.visibility = View.GONE
         right.addView(airNote, lp(MATCH, WRAP).apply { topMargin = dp(32) })
+        // 0.4.1: 위치를 못 읽고 시연 도구가 꺼져 있으면 시트를 움직이지 않음
+        val (seatNote, _) = note("seat", "시트 위치를 읽지 못해 시트는 움직이지 않아요.")
+        seatNote.visibility = if (Nap.seatHeld) View.VISIBLE else View.GONE
+        right.addView(seatNote, lp(MATCH, WRAP).apply { topMargin = dp(16) })
         // 0.4: 재우는 중에도 화면에서 끝낼 수 있게('일어났어요'와 같은 되돌리기)
         addBtn(right, btn(Btn.Kind.TONAL, "그만 쉬기", "sun") { Nap.restore("그만 쉬기를 누름") }, 32, dp(400))
 
@@ -790,6 +796,7 @@ class MainActivity : Activity() {
             }
             if (doing.text.toString() != s) { doing.text = s; if (!first) Ui.enter(doing) }
             dots.set(BooleanArray(5) { i -> i < n && !(i == 3 && hvac == false) }, animate = !first)
+            seatNote.visibility = if (Nap.seatHeld) View.VISIBLE else View.GONE
             first = false
             val now = System.currentTimeMillis()
             if (now - lastRead > 2000) { lastRead = now; Car.ambient.get { v -> if (v != null) amb.text = "$v%" } }
@@ -1040,7 +1047,7 @@ class MainActivity : Activity() {
             val wrap = column()
             wrap.addView(View(this).apply { setBackgroundColor(Ui.W10) }, lp(MATCH, 1))
             val r = row()
-            r.minimumHeight = dp(120)
+            r.minimumHeight = dp(104)   // 0.4.1: 줄이 하나 늘어 판이 화면보다 길어지지 않게 120에서 줄임(글 두 줄 88에 맞음)
             val texts = column()
             texts.addView(label(title, 32, Ui.WHITE, 700, 48))
             val s = label(sub, 26, Ui.W64, 400, 40)
@@ -1053,6 +1060,9 @@ class MainActivity : Activity() {
         }
         val fastToggle = Toggle(this, Nap.fast) { on -> Nap.fast = on; prefs.edit().putBoolean("fast", on).apply(); fastDot.visibility = if (on) View.VISIBLE else View.GONE }
         line("빠르게 보기", "1분을 2초로 줄여 보여 줘요", fastToggle)
+        // 0.4.1: 위치를 못 읽는 차(에뮬레이터)에서 정한 시간만큼 시트를 움직이는 길은 이것을 켰을 때만(기본 꺼짐)
+        val demoSeatToggle = Toggle(this, Nap.demoSeat) { on -> Nap.demoSeat = on; prefs.edit().putBoolean("demoSeat", on).apply(); log("시연 도구: 시간으로 시트 움직이기 $on") }
+        line("시간으로 시트 움직이기", "위치를 못 읽는 차에서 정한 시간만큼 움직여요(시연용)", demoSeatToggle)
         val hintSub = line("권하는 말 들어 보기", "두 시간 달렸을 때 하는 말을 지금 들려줘요", Btn(this, Btn.Kind.SMALL, "들어 보기").onClick { tryHint() })
         val weekSub = line("쉰 기록 지우기", weekLine(), Btn(this, Btn.Kind.SMALL, "지우기").onClick { Records.clear(); toolsRefresh?.invoke() })
         line("물음 다시 답하기", "처음 물음 셋을 다시 보여 줘요", Btn(this, Btn.Kind.SMALL, "다시 답하기").onClick { closeTools(); if (Nap.state == State.IDLE) go("ask") })
@@ -1073,6 +1083,7 @@ class MainActivity : Activity() {
         Ui.enter(p)
         toolsRefresh = {
             fastToggle.set(Nap.fast)
+            demoSeatToggle.set(Nap.demoSeat)
             weekSub.text = weekLine()
             learnSub.text = Learn.line()
             if (hintText.isNotEmpty()) hintSub.text = hintText

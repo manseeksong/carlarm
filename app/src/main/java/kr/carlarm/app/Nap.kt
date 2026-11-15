@@ -119,6 +119,10 @@ object Nap {
      * 이때는 정한 시간만큼 보내고 멈추며(Car.pushFor), 되돌릴 때 반대로 같은 시간만큼 보낸 뒤 '직접 확인해 주세요'를 보입니다.
      */
     var posUnknown = false; private set
+    /** 0.4.1: 정한 시간으로 움직이는 길은 시연 도구의 '시간으로 시트 움직이기'가 켜져 있을 때만 씁니다(에뮬레이터 시연용, 기본 꺼짐) */
+    var demoSeat = false
+    /** 0.4.1: 위치를 모르는데 시연 도구가 꺼져 있어 시트를 움직이지 않음(재우는 중 화면에 보임) */
+    var seatHeld = false; private set
     /** 위치를 모른 채 세우거나 되돌린 축(되돌린 화면에 '직접 확인'으로 보임) */
     private val unconfirmed = LinkedHashSet<String>()
     /** 위치를 모를 때 쉬는 자세로 보낼 방향과 시간(ms). 값은 가정: 에뮬레이터 콘솔의 시트 모터가 1초에 50만큼 움직여(100ms에 5),
@@ -151,6 +155,7 @@ object Nap {
         heatOnByUs = false; blindMoved = false; cabinAtStart = null
         Car.axes.forEach { it.blindMs = 0 }
         unconfirmed.clear()
+        seatHeld = false
         t0 = SystemClock.uptimeMillis()
         wallT0 = System.currentTimeMillis()
         startedWall = wallT0
@@ -164,7 +169,9 @@ object Nap {
             hvacOn = before[Car.hvacPower] == true
             log("쉬기 전 값(${before.size}개): " + before.entries.joinToString { "${it.key.name}=${it.value}" })
             posUnknown = Car.seats.all { (before[it] as? Int ?: 0) == 0 }
-            if (posUnknown) log("시트 위치를 모름(열 축 모두 0이거나 못 읽음): 정한 시간만큼 보내고 멈춤(시간은 가정)")
+            seatHeld = posUnknown && !demoSeat
+            if (seatHeld) { log("시트 위치를 모름(열 축 모두 0이거나 못 읽음), 시연 도구의 '시간으로 시트 움직이기' 꺼짐: 시트는 움직이지 않음"); changed() }
+            else if (posUnknown) log("시트 위치를 모름(열 축 모두 0이거나 못 읽음), 시연 도구 켜짐: 정한 시간만큼 보내고 멈춤(시간은 가정)")
             Car.readSafety { _, driverIn ->
                 if (my !== token || state != State.FALLING) return@readSafety
                 driverInAtStart = driverIn == true
@@ -243,7 +250,7 @@ object Nap {
         val nextSec = if (resumeFromSec < T - leadSec()) T - leadSec() else T + 181.0
         CarlarmService.setBackstop(wallT0 + ms(nextSec))
         // 0초: 안전 문장
-        at(0.0) { say("도로 위나 갓길, 지하 주차장 같은 막힌 곳에서는 쓰지 마세요. ${minutes}분 뒤에 깨울게요.") }
+        at(0.0) { say("도로 위나 갓길에서는 쓰지 마시고, 막힌 곳도 피하세요. ${minutes}분 뒤에 깨울게요.") }
         // 2초: 문을 잠금(네 문 묶음), 창 잠금. 다시 읽어 확인합니다.
         at(2.0) {
             if (was(Car.doorLock) == false) Car.apply(Car.doorLock, true) { ok -> if (!ok) log("문 잠금이 다시 읽기에서 확인되지 않음") }
@@ -290,6 +297,7 @@ object Nap {
         // 8초: 시트 편한 자세(한 번에 하나씩, 위치를 읽으며 움직이고 목표에서 멈춤)
         at(8.0) {
             if (!active) return@at
+            if (seatHeld) { log("시트 편한 자세: 시트 위치를 읽지 못해 시트는 움직이지 않음"); return@at }
             if (posUnknown) { val j = restPoseTimed(); log("시트 차례(위치를 모름, 정한 시간): " + j.joinToString { it.first }); jobs(j); return@at }
             val pose = restPose()
             if (pose.isEmpty()) log("시트 편한 자세: 움직일 축 없음(위치를 읽지 못했거나 이미 그 자리)")
@@ -437,6 +445,9 @@ object Nap {
     fun restore(reason: String, keepLock: Boolean = false) {
         if (!active) return
         log("되돌림 시작: $reason")
+        // 0.4.1: 지금 움직이는 시트 축에 곧바로 STOP을 보내고 남은 시트 차례를 버립니다(기어로 끝날 때도 위치 읽기를 기다리지 않음)
+        Car.stopSeats("쪽잠이 끝남($reason)")
+        if (motorList.isNotEmpty()) log("남은 시트 차례 ${motorList.size}개를 버림: " + motorList.joinToString { it.first })
         main.removeCallbacksAndMessages(token)
         token = Any()
         Car.bump()          // 앞 차례의 늦은 다시 읽기와 재시도는 이제 버립니다
