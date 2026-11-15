@@ -76,8 +76,10 @@ class MainActivity : Activity() {
             prefs.edit().putBoolean("notiAsked", true).apply()
             requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 7)
         }
-        intent?.getStringExtra("ambientTest")?.let { ambientTest(it) }
-        intent?.getStringExtra("devTest")?.let { devTest(it) }
+        if (testHooks) {
+            intent?.getStringExtra("ambientTest")?.let { ambientTest(it) }
+            intent?.getStringExtra("devTest")?.let { devTest(it) }
+        }
     }
 
     override fun onResume() {
@@ -96,8 +98,10 @@ class MainActivity : Activity() {
 
     override fun onNewIntent(intent: android.content.Intent?) {
         super.onNewIntent(intent)
-        intent?.getStringExtra("ambientTest")?.let { ambientTest(it) }
-        intent?.getStringExtra("devTest")?.let { devTest(it) }
+        if (testHooks) {
+            intent?.getStringExtra("ambientTest")?.let { ambientTest(it) }
+            intent?.getStringExtra("devTest")?.let { devTest(it) }
+        }
     }
 
     @Deprecated("Activity의 뒤로 가기")
@@ -109,6 +113,11 @@ class MainActivity : Activity() {
             else -> @Suppress("DEPRECATION") super.onBackPressed()
         }
     }
+
+    /** 시험용 입구(devTest, ambientTest)는 디버그 빌드에서만 받습니다. 출시판(release)은 디버그 가능 표시가 없어 받지 않으므로,
+     *  다른 앱이 인텐트로 칼람을 열어 문 잠금 같은 차 값을 바꾸게 할 수 없습니다. */
+    private val testHooks: Boolean
+        get() = (applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0
 
     /** 시험용: "장치:값" 하나를 보내고 2.5초 뒤 다시 읽어 기록합니다(adb로만 부름). 예: lock:true, fan:3, trip:0 */
     private fun devTest(arg: String) {

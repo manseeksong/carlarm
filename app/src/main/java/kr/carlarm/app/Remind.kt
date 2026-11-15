@@ -5,7 +5,7 @@ import org.json.JSONObject
 import java.util.Calendar
 
 /**
- * 쉼 알림(설계 4절 A, 기획서 칸 3 '때를 안다').
+ * 쉼 알림(접수 기획서 칸 3의 '때를 안다').
  *
  * 차가 운전자의 졸음을 직접 판단한 값은 일반 앱이 읽을 수 없습니다(AAOS DRIVER_DROWSINESS_ATTENTION_STATE는
  * Signature|Privileged 권한, Pleos의 DMS_DROWSINESS_WARNING은 공개되지 않은 값, 경고등 목록은 제한 권한).
